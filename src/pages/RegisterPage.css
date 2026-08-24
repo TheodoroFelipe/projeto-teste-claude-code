@@ -1,0 +1,18 @@
+.RegisterPage {
+  display: flex;
+  justify-content: center;
+}
+
+.RegisterPage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+  text-align: left;
+}
+
+.RegisterPage-error {
+  color: #c0392b;
+  margin: 0;
+}

@@ -1,0 +1,26 @@
+.AthleteProfilePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.AthleteProfilePage-backLink {
+  align-self: flex-start;
+}
+
+.AthleteProfilePage-progress {
+  max-width: 320px;
+  width: 100%;
+}
+
+.AthleteProfilePage-history {
+  max-width: 320px;
+  width: 100%;
+  text-align: left;
+}
+
+.AthleteProfilePage-historyEntry {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}

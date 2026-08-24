@@ -1,0 +1,28 @@
+.UserProfilePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.UserProfilePage-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+  text-align: left;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.UserProfilePage-error {
+  color: #c0392b;
+  margin: 0;
+}
+
+.UserProfilePage-nameEdit {
+  display: flex;
+  gap: 0.5rem;
+}

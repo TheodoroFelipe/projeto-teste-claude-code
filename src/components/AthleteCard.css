@@ -1,0 +1,37 @@
+.AthleteCard {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  max-width: 320px;
+}
+
+.AthleteCard-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.AthleteCard-info {
+  text-align: left;
+}
+
+.AthleteCard-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.AthleteCard-sport {
+  margin: 0.25rem 0;
+  color: #666;
+}
+
+.AthleteCard-details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
