@@ -1,16 +1,40 @@
-.HomePage-newAthleteLink {
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-
-.HomePage-list {
+.HomePage {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: center;
 }
 
+.HomePage-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.HomePage-filters {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.HomePage-searchInput {
+  flex: 1;
+}
+
+.HomePage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  align-items: center;
+}
+
 .HomePage-cardLink {
   text-decoration: none;
   color: inherit;
+}
+
+.HomePage-empty {
+  color: #666;
 }

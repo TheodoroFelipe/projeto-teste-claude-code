@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 import type { Athlete, NewAthleteInput } from '../types/athlete'
+import { readFileAsDataUrl } from '../utils/file'
 import './AthleteForm.css'
 
 interface AthleteFormProps {
@@ -16,6 +17,20 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
   const [nationality, setNationality] = useState(initialValues?.nationality ?? '')
   const [photoUrl, setPhotoUrl] = useState(initialValues?.photoUrl ?? '')
   const [age, setAge] = useState(initialValues?.age !== undefined ? String(initialValues.age) : '')
+  const [photoError, setPhotoError] = useState<string | null>(null)
+
+  async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setPhotoError(null)
+    try {
+      const dataUrl = await readFileAsDataUrl(file)
+      setPhotoUrl(dataUrl)
+    } catch {
+      setPhotoError('Não foi possível carregar a imagem.')
+    }
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -24,7 +39,7 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
       sport: sport.trim(),
       team: team.trim(),
       nationality: nationality.trim(),
-      photoUrl: photoUrl.trim() || undefined,
+      photoUrl: photoUrl || undefined,
       age: age.trim() ? Number(age) : undefined,
     })
   }
@@ -55,13 +70,10 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
         onChange={(event) => setNationality(event.target.value)}
       />
 
-      <label htmlFor="athlete-photo">URL da foto</label>
-      <input
-        id="athlete-photo"
-        type="url"
-        value={photoUrl}
-        onChange={(event) => setPhotoUrl(event.target.value)}
-      />
+      <label htmlFor="athlete-photo">Foto</label>
+      {photoUrl && <img className="AthleteForm-photoPreview" src={photoUrl} alt="Pré-visualização" />}
+      <input id="athlete-photo" type="file" accept="image/*" onChange={handlePhotoChange} />
+      {photoError && <p className="AthleteForm-photoError">{photoError}</p>}
 
       <label htmlFor="athlete-age">Idade</label>
       <input id="athlete-age" type="number" min={0} value={age} onChange={(event) => setAge(event.target.value)} />

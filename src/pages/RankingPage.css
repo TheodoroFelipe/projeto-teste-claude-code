@@ -1,0 +1,58 @@
+.RankingPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.RankingPage-backLink {
+  align-self: flex-start;
+}
+
+.RankingPage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 480px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.RankingPage-item {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.RankingPage-itemLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.RankingPage-position {
+  font-weight: bold;
+  min-width: 2rem;
+}
+
+.RankingPage-name {
+  flex: 1;
+  text-align: left;
+}
+
+.RankingPage-sport {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.RankingPage-level {
+  font-size: 0.9rem;
+}
+
+.RankingPage-xp {
+  font-weight: bold;
+}

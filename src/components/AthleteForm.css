@@ -6,3 +6,16 @@
   max-width: 320px;
   text-align: left;
 }
+
+.AthleteForm-photoPreview {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  align-self: center;
+}
+
+.AthleteForm-photoError {
+  color: #c0392b;
+  margin: 0;
+}
