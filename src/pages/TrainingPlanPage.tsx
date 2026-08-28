@@ -1,16 +1,19 @@
-import { Link, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import DayPlanEditor from '../components/DayPlanEditor'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import { WEEK_DAYS, getDayPlan, getWeeklyPlanOrDefault } from '../utils/trainingPlan'
-import type { PlannedExercise } from '../types/trainingPlan'
+import type { PlannedExercise, WeeklyPlan } from '../types/trainingPlan'
 import './TrainingPlanPage.css'
 
 function TrainingPlanPage() {
   const { athleteId } = useParams<{ athleteId: string }>()
   const { getAthleteById, updateWeeklyPlan } = useAthletes()
+  const navigate = useNavigate()
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
   const canManage = useCanManageAthlete(athleteId)
+  const [draftPlan, setDraftPlan] = useState<WeeklyPlan | null>(null)
 
   if (!athlete) {
     return (
@@ -31,22 +34,29 @@ function TrainingPlanPage() {
   }
 
   const currentAthlete = athlete
-  const weeklyPlan = getWeeklyPlanOrDefault(currentAthlete)
+  const weeklyPlan = draftPlan ?? getWeeklyPlanOrDefault(currentAthlete)
 
   function handleAdd(dayIndex: number, exercise: PlannedExercise) {
-    const nextPlan = weeklyPlan.map((dayPlan, index) =>
-      index === dayIndex ? { ...dayPlan, exercises: [...dayPlan.exercises, exercise] } : dayPlan,
+    setDraftPlan(
+      weeklyPlan.map((dayPlan, index) =>
+        index === dayIndex ? { ...dayPlan, exercises: [...dayPlan.exercises, exercise] } : dayPlan,
+      ),
     )
-    updateWeeklyPlan(currentAthlete.id, nextPlan)
   }
 
   function handleRemove(dayIndex: number, exerciseId: string) {
-    const nextPlan = weeklyPlan.map((dayPlan, index) =>
-      index === dayIndex
-        ? { ...dayPlan, exercises: dayPlan.exercises.filter((exercise) => exercise.id !== exerciseId) }
-        : dayPlan,
+    setDraftPlan(
+      weeklyPlan.map((dayPlan, index) =>
+        index === dayIndex
+          ? { ...dayPlan, exercises: dayPlan.exercises.filter((exercise) => exercise.id !== exerciseId) }
+          : dayPlan,
+      ),
     )
-    updateWeeklyPlan(currentAthlete.id, nextPlan)
+  }
+
+  function handleSave() {
+    updateWeeklyPlan(currentAthlete.id, weeklyPlan)
+    navigate(`/athletes/${currentAthlete.id}`)
   }
 
   return (
@@ -70,6 +80,10 @@ function TrainingPlanPage() {
           )
         })}
       </div>
+
+      <button type="button" className="TrainingPlanPage-saveButton" onClick={handleSave}>
+        Salvar plano
+      </button>
     </div>
   )
 }

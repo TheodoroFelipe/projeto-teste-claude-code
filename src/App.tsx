@@ -4,6 +4,7 @@ import RankingPage from './pages/RankingPage'
 import AthleteProfilePage from './pages/AthleteProfilePage'
 import TrainingSessionPage from './pages/TrainingSessionPage'
 import TrainingPlanPage from './pages/TrainingPlanPage'
+import TodayWorkoutPage from './pages/TodayWorkoutPage'
 import NewAthletePage from './pages/NewAthletePage'
 import EditAthletePage from './pages/EditAthletePage'
 import LoginPage from './pages/LoginPage'
@@ -22,6 +23,7 @@ function App() {
         <h1>Projeto Teste Claude Code</h1>
         {isAuthenticated && currentUser && (
           <div className="App-headerAuth">
+            <Link to="/treino-do-dia">Treino do dia</Link>
             <Link to="/profile">{currentUser.name}</Link>
             <button type="button" onClick={logout}>
               Sair
@@ -85,6 +87,14 @@ function App() {
           element={
             <RequireAuth>
               <EditAthletePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/treino-do-dia"
+          element={
+            <RequireAuth>
+              <TodayWorkoutPage />
             </RequireAuth>
           }
         />
