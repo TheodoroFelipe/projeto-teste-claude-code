@@ -1,0 +1,18 @@
+export const SPORT_OPTIONS: string[] = [
+  'Musculação',
+  'Corrida',
+  'Ciclismo',
+  'Natação',
+  'Futebol',
+  'Vôlei',
+  'Basquete',
+  'Tênis',
+  'Judô',
+  'Jiu-Jitsu',
+  'Muay Thai',
+  'CrossFit',
+  'Yoga',
+  'Pilates',
+  'Atletismo',
+  'Outro',
+]

@@ -4,8 +4,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useAthletes } from '../hooks/useAthletes'
 import { generateId } from '../utils/id'
+import { SPORT_OPTIONS } from '../utils/sports'
 import { isValidEmail, MIN_PASSWORD_LENGTH } from '../utils/validation'
 import './RegisterPage.css'
+
+const OTHER_SPORT_OPTION = 'Outro'
 
 function RegisterPage() {
   const { register, isEmailTaken } = useAuth()
@@ -16,6 +19,7 @@ function RegisterPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [sport, setSport] = useState('')
+  const [customSport, setCustomSport] = useState('')
   const [isCoach, setIsCoach] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -30,12 +34,14 @@ function RegisterPage() {
       return setError(`A senha deve ter pelo menos ${MIN_PASSWORD_LENGTH} caracteres.`)
     }
     if (password !== confirmPassword) return setError('As senhas não coincidem.')
-    if (!sport.trim()) return setError('Modalidade principal é obrigatória.')
+    if (!sport) return setError('Modalidade principal é obrigatória.')
+    const finalSport = sport === OTHER_SPORT_OPTION ? customSport.trim() : sport
+    if (!finalSport) return setError('Informe a modalidade.')
     if (isEmailTaken(email)) return setError('Este e-mail já está cadastrado.')
 
     setIsSubmitting(true)
     const athleteId = generateId()
-    addAthlete({ name: name.trim(), sport: sport.trim(), team: '', nationality: '' }, athleteId)
+    addAthlete({ name: name.trim(), sport: finalSport, team: '', nationality: '' }, athleteId)
 
     const result = await register({
       name,
@@ -88,14 +94,28 @@ function RegisterPage() {
           onChange={(event) => setConfirmPassword(event.target.value)}
         />
         <label htmlFor="register-sport">Modalidade principal</label>
-        <input
-          id="register-sport"
-          type="text"
-          required
-          placeholder="Ex.: Musculação, Natação..."
-          value={sport}
-          onChange={(event) => setSport(event.target.value)}
-        />
+        <select id="register-sport" required value={sport} onChange={(event) => setSport(event.target.value)}>
+          <option value="" disabled>
+            Selecione uma modalidade
+          </option>
+          {SPORT_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        {sport === OTHER_SPORT_OPTION && (
+          <>
+            <label htmlFor="register-custom-sport">Qual modalidade?</label>
+            <input
+              id="register-custom-sport"
+              type="text"
+              required
+              value={customSport}
+              onChange={(event) => setCustomSport(event.target.value)}
+            />
+          </>
+        )}
         <label className="RegisterPage-checkboxLabel">
           <input type="checkbox" checked={isCoach} onChange={(event) => setIsCoach(event.target.checked)} />
           Sou treinador
