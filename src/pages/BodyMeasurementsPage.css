@@ -1,0 +1,63 @@
+.BodyMeasurementsPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.BodyMeasurementsPage-backLink {
+  align-self: flex-start;
+}
+
+.BodyMeasurementsPage-form {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.BodyMeasurementsPage-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  width: 110px;
+}
+
+.BodyMeasurementsPage-form button {
+  height: 32px;
+}
+
+.BodyMeasurementsPage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.BodyMeasurementsPage-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.BodyMeasurementsPage-entryDate {
+  font-weight: 600;
+}
+
+.BodyMeasurementsPage-entryValues {
+  font-size: 0.85rem;
+  color: #555;
+}

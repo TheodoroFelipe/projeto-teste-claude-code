@@ -5,6 +5,7 @@ import AthleteProfilePage from './pages/AthleteProfilePage'
 import TrainingSessionPage from './pages/TrainingSessionPage'
 import TrainingPlanPage from './pages/TrainingPlanPage'
 import TodayWorkoutPage from './pages/TodayWorkoutPage'
+import BodyMeasurementsPage from './pages/BodyMeasurementsPage'
 import NewAthletePage from './pages/NewAthletePage'
 import EditAthletePage from './pages/EditAthletePage'
 import LoginPage from './pages/LoginPage'
@@ -22,13 +23,16 @@ function App() {
       <header className="App-header">
         <h1>Projeto Teste Claude Code</h1>
         {isAuthenticated && currentUser && (
-          <div className="App-headerAuth">
+          <nav className="App-nav">
             <Link to="/treino-do-dia">Treino do dia</Link>
+            <Link to={`/athletes/${currentUser.athleteId}/plan`}>Plano semanal</Link>
+            <Link to={`/athletes/${currentUser.athleteId}/evolution`}>Evolução</Link>
+            <Link to="/ranking">Ranking</Link>
             <Link to="/profile">{currentUser.name}</Link>
             <button type="button" onClick={logout}>
               Sair
             </button>
-          </div>
+          </nav>
         )}
       </header>
       <Routes>
@@ -87,6 +91,14 @@ function App() {
           element={
             <RequireAuth>
               <EditAthletePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/athletes/:athleteId/evolution"
+          element={
+            <RequireAuth>
+              <BodyMeasurementsPage />
             </RequireAuth>
           }
         />

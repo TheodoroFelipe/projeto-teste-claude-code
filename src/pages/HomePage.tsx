@@ -32,9 +32,6 @@ function HomePage() {
         <Link className="HomePage-newAthleteLink" to="/athletes/new">
           + Cadastrar atleta
         </Link>
-        <Link className="HomePage-rankingLink" to="/ranking">
-          Ver ranking por XP &rarr;
-        </Link>
       </div>
 
       <div className="HomePage-filters">

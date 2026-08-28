@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { generateId } from '../utils/id'
 import { seedAthletes } from '../data/seedAthletes'
-import type { Athlete, NewAthleteInput, NewEvolutionEntryInput } from '../types/athlete'
+import type { Athlete, NewAthleteInput, NewBodyMeasurementInput, NewEvolutionEntryInput } from '../types/athlete'
 import type { WeeklyPlan } from '../types/trainingPlan'
 
 export interface AthleteContextValue {
@@ -13,6 +13,7 @@ export interface AthleteContextValue {
   updateAthlete: (athleteId: string, input: NewAthleteInput) => void
   addEvolutionEntry: (athleteId: string, input: NewEvolutionEntryInput) => void
   updateWeeklyPlan: (athleteId: string, weeklyPlan: WeeklyPlan) => void
+  addMeasurementEntry: (athleteId: string, input: NewBodyMeasurementInput) => void
 }
 
 export const AthleteContext = createContext<AthleteContextValue | undefined>(undefined)
@@ -64,9 +65,32 @@ function AthleteProvider({ children }: AthleteProviderProps) {
     )
   }
 
+  function addMeasurementEntry(athleteId: string, input: NewBodyMeasurementInput): void {
+    const newEntry = {
+      ...input,
+      id: generateId(),
+      date: new Date().toISOString(),
+    }
+    setAthletes((prev) =>
+      prev.map((athlete) =>
+        athlete.id === athleteId
+          ? { ...athlete, measurements: [...(athlete.measurements ?? []), newEntry] }
+          : athlete,
+      ),
+    )
+  }
+
   return (
     <AthleteContext.Provider
-      value={{ athletes, getAthleteById, addAthlete, updateAthlete, addEvolutionEntry, updateWeeklyPlan }}
+      value={{
+        athletes,
+        getAthleteById,
+        addAthlete,
+        updateAthlete,
+        addEvolutionEntry,
+        updateWeeklyPlan,
+        addMeasurementEntry,
+      }}
     >
       {children}
     </AthleteContext.Provider>

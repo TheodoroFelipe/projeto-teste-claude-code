@@ -47,6 +47,10 @@ function AthleteProfilePage() {
           <Link className="AthleteProfilePage-sessionLink" to={`/athletes/${athlete.id}/session`}>
             Iniciar sessão de treino
           </Link>
+
+          <Link className="AthleteProfilePage-evolutionLink" to={`/athletes/${athlete.id}/evolution`}>
+            Ver evolução física
+          </Link>
         </>
       )}
 
