@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import TrendLineChart from '../components/TrendLineChart'
+import type { TrendChartPoint, TrendChartSeries } from '../components/TrendLineChart'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
-import type { BodyMeasurementEntry, NewBodyMeasurementInput } from '../types/athlete'
+import type { NewBodyMeasurementInput } from '../types/athlete'
 import './BodyMeasurementsPage.css'
 
 interface FieldConfig {
@@ -24,6 +26,19 @@ const FIELDS: FieldConfig[] = [
   { key: 'hipCm', label: 'Quadril', unit: 'cm' },
 ]
 
+const CATEGORICAL_COLORS = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#4a3aa7']
+
+const MEASUREMENT_SERIES: TrendChartSeries[] = [
+  { key: 'armCm', label: 'Braço', color: CATEGORICAL_COLORS[0] },
+  { key: 'thighCm', label: 'Coxa', color: CATEGORICAL_COLORS[1] },
+  { key: 'waistCm', label: 'Cintura', color: CATEGORICAL_COLORS[2] },
+  { key: 'chestCm', label: 'Peito', color: CATEGORICAL_COLORS[3] },
+  { key: 'beltCm', label: 'Cinturão', color: CATEGORICAL_COLORS[4] },
+  { key: 'hipCm', label: 'Quadril', color: CATEGORICAL_COLORS[5] },
+]
+
+const WEIGHT_SERIES: TrendChartSeries[] = [{ key: 'weightKg', label: 'Peso', color: CATEGORICAL_COLORS[0] }]
+
 type FormValues = Record<keyof NewBodyMeasurementInput, string>
 
 const EMPTY_VALUES: FormValues = {
@@ -36,11 +51,6 @@ const EMPTY_VALUES: FormValues = {
   chestCm: '',
   beltCm: '',
   hipCm: '',
-}
-
-function formatValue(entry: BodyMeasurementEntry, field: FieldConfig): string | null {
-  const value = entry[field.key]
-  return value !== undefined ? `${field.label}: ${value}${field.unit}` : null
 }
 
 function BodyMeasurementsPage() {
@@ -69,9 +79,22 @@ function BodyMeasurementsPage() {
   }
 
   const currentAthlete = athlete
-  const measurements = [...(currentAthlete.measurements ?? [])].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  )
+  const measurements = currentAthlete.measurements ?? []
+  const sortedDesc = [...measurements].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const sortedAsc = [...measurements].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+  const chartPoints: TrendChartPoint[] = sortedAsc.map((entry) => ({
+    dateLabel: new Date(entry.date).toLocaleDateString('pt-BR'),
+    values: {
+      weightKg: entry.weightKg,
+      armCm: entry.armCm,
+      thighCm: entry.thighCm,
+      waistCm: entry.waistCm,
+      chestCm: entry.chestCm,
+      beltCm: entry.beltCm,
+      hipCm: entry.hipCm,
+    },
+  }))
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -107,21 +130,49 @@ function BodyMeasurementsPage() {
         <button type="submit">Registrar medidas</button>
       </form>
 
-      <ul className="BodyMeasurementsPage-list">
-        {measurements.map((entry) => (
-          <li key={entry.id} className="BodyMeasurementsPage-entry">
-            <span className="BodyMeasurementsPage-entryDate">
-              {new Date(entry.date).toLocaleDateString('pt-BR')}
-            </span>
-            <span className="BodyMeasurementsPage-entryValues">
-              {FIELDS.map((field) => formatValue(entry, field))
-                .filter((text): text is string => text !== null)
-                .join(' · ')}
-            </span>
-          </li>
-        ))}
-        {measurements.length === 0 && <p>Nenhuma medida registrada ainda.</p>}
-      </ul>
+      {measurements.length === 0 ? (
+        <p>Nenhuma medida registrada ainda.</p>
+      ) : (
+        <>
+          <section className="BodyMeasurementsPage-section">
+            <h3>Evolução do peso</h3>
+            <TrendLineChart points={chartPoints} series={WEIGHT_SERIES} unit="kg" />
+          </section>
+
+          <section className="BodyMeasurementsPage-section">
+            <h3>Evolução das medidas</h3>
+            <TrendLineChart points={chartPoints} series={MEASUREMENT_SERIES} unit="cm" />
+          </section>
+
+          <section className="BodyMeasurementsPage-section">
+            <h3>Histórico</h3>
+            <div className="BodyMeasurementsPage-tableWrap">
+              <table className="BodyMeasurementsPage-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    {FIELDS.map((field) => (
+                      <th key={field.key}>
+                        {field.label} ({field.unit})
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedDesc.map((entry) => (
+                    <tr key={entry.id}>
+                      <td>{new Date(entry.date).toLocaleDateString('pt-BR')}</td>
+                      {FIELDS.map((field) => (
+                        <td key={field.key}>{entry[field.key] ?? '—'}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
+      )}
     </div>
   )
 }

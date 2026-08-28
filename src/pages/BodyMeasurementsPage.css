@@ -33,31 +33,42 @@
   height: 32px;
 }
 
-.BodyMeasurementsPage-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.BodyMeasurementsPage-section {
   width: 100%;
-  max-width: 480px;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   text-align: left;
 }
 
-.BodyMeasurementsPage-entry {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
+.BodyMeasurementsPage-section h3 {
+  align-self: flex-start;
+  margin: 0;
 }
 
-.BodyMeasurementsPage-entryDate {
-  font-weight: 600;
+.BodyMeasurementsPage-tableWrap {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.BodyMeasurementsPage-entryValues {
+.BodyMeasurementsPage-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 0.85rem;
-  color: #555;
+  white-space: nowrap;
+}
+
+.BodyMeasurementsPage-table th,
+.BodyMeasurementsPage-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.BodyMeasurementsPage-table th {
+  color: #52514e;
+  font-weight: 600;
 }

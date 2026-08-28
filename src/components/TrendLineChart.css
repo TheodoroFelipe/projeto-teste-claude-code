@@ -1,0 +1,80 @@
+.TrendLineChart {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.TrendLineChart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #52514e;
+}
+
+.TrendLineChart-legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.TrendLineChart-legendLine {
+  width: 16px;
+  height: 2px;
+  display: inline-block;
+}
+
+.TrendLineChart-svg {
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+  outline: none;
+}
+
+.TrendLineChart-empty {
+  color: #898781;
+  font-size: 0.85rem;
+}
+
+.TrendLineChart-tooltip {
+  align-self: flex-start;
+  border: 1px solid #e1e0d9;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  background: #fcfcfb;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 160px;
+}
+
+.TrendLineChart-tooltipDate {
+  font-weight: 600;
+  color: #0b0b0b;
+}
+
+.TrendLineChart-tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.TrendLineChart-tooltipKey {
+  width: 10px;
+  height: 2px;
+  display: inline-block;
+}
+
+.TrendLineChart-tooltipLabel {
+  color: #52514e;
+  flex: 1;
+}
+
+.TrendLineChart-tooltipValue {
+  font-weight: 700;
+  color: #0b0b0b;
+  font-variant-numeric: tabular-nums;
+}
