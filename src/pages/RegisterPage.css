@@ -16,3 +16,10 @@
   color: #c0392b;
   margin: 0;
 }
+
+.RegisterPage-checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row;
+}

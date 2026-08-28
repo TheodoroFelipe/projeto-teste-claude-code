@@ -4,13 +4,15 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 import { generateId } from '../utils/id'
 import { seedAthletes } from '../data/seedAthletes'
 import type { Athlete, NewAthleteInput, NewEvolutionEntryInput } from '../types/athlete'
+import type { WeeklyPlan } from '../types/trainingPlan'
 
 export interface AthleteContextValue {
   athletes: Athlete[]
   getAthleteById: (id: string) => Athlete | undefined
-  addAthlete: (input: NewAthleteInput) => void
+  addAthlete: (input: NewAthleteInput, id?: string) => void
   updateAthlete: (athleteId: string, input: NewAthleteInput) => void
   addEvolutionEntry: (athleteId: string, input: NewEvolutionEntryInput) => void
+  updateWeeklyPlan: (athleteId: string, weeklyPlan: WeeklyPlan) => void
 }
 
 export const AthleteContext = createContext<AthleteContextValue | undefined>(undefined)
@@ -26,10 +28,10 @@ function AthleteProvider({ children }: AthleteProviderProps) {
     return athletes.find((athlete) => athlete.id === id)
   }
 
-  function addAthlete(input: NewAthleteInput): void {
+  function addAthlete(input: NewAthleteInput, id: string = generateId()): void {
     const newAthlete: Athlete = {
       ...input,
-      id: generateId(),
+      id,
       evolutionHistory: [],
     }
     setAthletes((prev) => [...prev, newAthlete])
@@ -56,9 +58,15 @@ function AthleteProvider({ children }: AthleteProviderProps) {
     )
   }
 
+  function updateWeeklyPlan(athleteId: string, weeklyPlan: WeeklyPlan): void {
+    setAthletes((prev) =>
+      prev.map((athlete) => (athlete.id === athleteId ? { ...athlete, weeklyPlan } : athlete)),
+    )
+  }
+
   return (
     <AthleteContext.Provider
-      value={{ athletes, getAthleteById, addAthlete, updateAthlete, addEvolutionEntry }}
+      value={{ athletes, getAthleteById, addAthlete, updateAthlete, addEvolutionEntry, updateWeeklyPlan }}
     >
       {children}
     </AthleteContext.Provider>

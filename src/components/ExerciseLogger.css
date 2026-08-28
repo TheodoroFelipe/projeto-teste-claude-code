@@ -1,0 +1,174 @@
+.ExerciseLogger {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ExerciseLogger-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.ExerciseLogger-name {
+  font-family: Anton, sans-serif;
+  font-size: 22px;
+  color: var(--ts-ink);
+}
+
+.ExerciseLogger-modality {
+  font: 700 10px/1 'JetBrains Mono', monospace;
+  color: var(--ts-ink2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ExerciseLogger-sets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ExerciseLogger-setRow {
+  background: var(--ts-panel);
+  border: 1px solid var(--ts-line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: border-color 0.18s;
+  font-family: inherit;
+  text-align: left;
+}
+
+.ExerciseLogger-setRow:hover {
+  border-color: var(--ts-ember);
+}
+
+.ExerciseLogger-setLabel {
+  width: 26px;
+  font: 700 12px/1 'JetBrains Mono', monospace;
+  color: var(--ts-ink2);
+}
+
+.ExerciseLogger-setValues {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ExerciseLogger-setKg {
+  font-family: Anton, sans-serif;
+  font-size: 20px;
+  color: var(--ts-ink);
+}
+
+.ExerciseLogger-setReps {
+  font: 500 12px/1 'Zen Kaku Gothic New', sans-serif;
+  color: var(--ts-ink2);
+}
+
+.ExerciseLogger-setXp {
+  font: 700 10px/1 'JetBrains Mono', monospace;
+  color: var(--ts-ink2);
+}
+
+.ExerciseLogger-setCheck {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font: 700 14px/1 'Zen Kaku Gothic New', sans-serif;
+  border: 1px solid var(--ts-line);
+  background: transparent;
+  color: transparent;
+}
+
+.ExerciseLogger-setRow.is-done .ExerciseLogger-setXp {
+  color: var(--ts-ember);
+}
+
+.ExerciseLogger-setRow.is-done .ExerciseLogger-setCheck {
+  background: var(--ts-ember);
+  color: #fff;
+  border-color: var(--ts-ember);
+}
+
+.ExerciseLogger-addSet {
+  align-self: flex-start;
+  border: 1px solid var(--ts-line);
+  background: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font: 700 12px/1 'Zen Kaku Gothic New', sans-serif;
+  color: var(--ts-ink);
+  cursor: pointer;
+}
+
+.ExerciseLogger-completionCard {
+  background: var(--ts-panel);
+  border: 1px solid var(--ts-line);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color 0.18s;
+}
+
+.ExerciseLogger-completionCard:hover {
+  border-color: var(--ts-ember);
+}
+
+.ExerciseLogger-completionCard.is-done {
+  border-color: var(--ts-ember);
+}
+
+.ExerciseLogger-completionTarget {
+  font-family: Anton, sans-serif;
+  font-size: 22px;
+  color: var(--ts-ink);
+}
+
+.ExerciseLogger-completionXp {
+  font: 700 12px/1 'JetBrains Mono', monospace;
+  color: var(--ts-ink2);
+}
+
+.ExerciseLogger-completionCard.is-done .ExerciseLogger-completionXp {
+  color: var(--ts-ember);
+}
+
+.ExerciseLogger-rest {
+  background: var(--ts-chip);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ExerciseLogger-restLabel {
+  font: 500 13px/1 'Zen Kaku Gothic New', sans-serif;
+  color: var(--ts-ink);
+}
+
+.ExerciseLogger-restNext {
+  flex: 1;
+  font: 400 11.5px/1.3 'Zen Kaku Gothic New', sans-serif;
+  color: var(--ts-ink2);
+}
+
+.ExerciseLogger-restTimer {
+  font-family: Anton, sans-serif;
+  font-size: 20px;
+  color: var(--ts-indigo);
+}

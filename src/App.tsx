@@ -2,6 +2,8 @@ import { Link, Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import RankingPage from './pages/RankingPage'
 import AthleteProfilePage from './pages/AthleteProfilePage'
+import TrainingSessionPage from './pages/TrainingSessionPage'
+import TrainingPlanPage from './pages/TrainingPlanPage'
 import NewAthletePage from './pages/NewAthletePage'
 import EditAthletePage from './pages/EditAthletePage'
 import LoginPage from './pages/LoginPage'
@@ -59,6 +61,22 @@ function App() {
           element={
             <RequireAuth>
               <AthleteProfilePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/athletes/:athleteId/session"
+          element={
+            <RequireAuth>
+              <TrainingSessionPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/athletes/:athleteId/plan"
+          element={
+            <RequireAuth>
+              <TrainingPlanPage />
             </RequireAuth>
           }
         />

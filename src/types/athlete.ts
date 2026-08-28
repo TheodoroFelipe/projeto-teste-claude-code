@@ -1,3 +1,5 @@
+import type { WeeklyPlan } from './trainingPlan'
+
 export interface EvolutionEntry {
   id: string
   date: string
@@ -14,6 +16,7 @@ export interface Athlete {
   photoUrl?: string
   age?: number
   evolutionHistory: EvolutionEntry[]
+  weeklyPlan?: WeeklyPlan
 }
 
 export interface NewAthleteInput {

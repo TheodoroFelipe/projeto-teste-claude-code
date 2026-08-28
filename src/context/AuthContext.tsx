@@ -15,6 +15,7 @@ export interface AuthContextValue {
   login: (input: LoginInput) => Promise<AuthResult>
   logout: () => void
   updateName: (name: string) => Promise<AuthResult>
+  isEmailTaken: (email: string) => boolean
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -24,7 +25,14 @@ interface AuthProviderProps {
 }
 
 function toPublicUser(user: User): PublicUser {
-  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt }
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    athleteId: user.athleteId,
+    role: user.role,
+  }
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
@@ -59,10 +67,16 @@ function AuthProvider({ children }: AuthProviderProps) {
       email,
       passwordHash: await hashPassword(input.password),
       createdAt: new Date().toISOString(),
+      athleteId: input.athleteId,
+      role: input.role,
     }
     setUsers((prev) => [...prev, newUser])
     setCurrentUserId(newUser.id)
     return { ok: true }
+  }
+
+  function isEmailTaken(email: string): boolean {
+    return users.some((user) => user.email.toLowerCase() === email.trim().toLowerCase())
   }
 
   async function login(input: LoginInput): Promise<AuthResult> {
@@ -93,7 +107,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, register, login, logout, updateName }}>
+    <AuthContext.Provider
+      value={{ currentUser, isAuthenticated, register, login, logout, updateName, isEmailTaken }}
+    >
       {children}
     </AuthContext.Provider>
   )

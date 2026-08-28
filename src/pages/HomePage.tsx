@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import AthleteCard from '../components/AthleteCard'
 import { useAthletes } from '../hooks/useAthletes'
+import { useAuth } from '../hooks/useAuth'
 import './HomePage.css'
 
 function HomePage() {
+  const { currentUser } = useAuth()
   const { athletes } = useAthletes()
   const [search, setSearch] = useState('')
   const [sportFilter, setSportFilter] = useState('')
@@ -19,6 +21,10 @@ function HomePage() {
     const matchesSport = sportFilter ? athlete.sport === sportFilter : true
     return matchesSearch && matchesSport
   })
+
+  if (currentUser && currentUser.role !== 'coach') {
+    return <Navigate to={`/athletes/${currentUser.athleteId}`} replace />
+  }
 
   return (
     <div className="HomePage">

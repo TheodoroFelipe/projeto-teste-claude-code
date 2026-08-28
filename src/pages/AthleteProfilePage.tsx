@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import AthleteCard from '../components/AthleteCard'
 import { useAthletes } from '../hooks/useAthletes'
+import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import { getLevelProgress, getTotalXp } from '../utils/xp'
 import './AthleteProfilePage.css'
 
@@ -8,6 +9,7 @@ function AthleteProfilePage() {
   const { athleteId } = useParams<{ athleteId: string }>()
   const { getAthleteById, addEvolutionEntry } = useAthletes()
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
+  const canManage = useCanManageAthlete(athleteId)
 
   if (!athlete) {
     return (
@@ -32,17 +34,34 @@ function AthleteProfilePage() {
 
       <AthleteCard athlete={athlete} />
 
-      <Link className="AthleteProfilePage-editLink" to={`/athletes/${athlete.id}/edit`}>
-        Editar atleta
-      </Link>
+      {canManage && (
+        <>
+          <Link className="AthleteProfilePage-editLink" to={`/athletes/${athlete.id}/edit`}>
+            Editar atleta
+          </Link>
+
+          <Link className="AthleteProfilePage-planLink" to={`/athletes/${athlete.id}/plan`}>
+            Configurar plano semanal
+          </Link>
+
+          <Link className="AthleteProfilePage-sessionLink" to={`/athletes/${athlete.id}/session`}>
+            Iniciar sessão de treino
+          </Link>
+        </>
+      )}
 
       <div className="AthleteProfilePage-progress">
         <p>
           Nível {level} — {currentLevelXp} XP ({xpToNextLevel} XP para o próximo nível)
         </p>
-        <button type="button" onClick={() => addEvolutionEntry(athlete.id, { xpGained: 10, note: 'Treino registrado' })}>
-          +10 XP
-        </button>
+        {canManage && (
+          <button
+            type="button"
+            onClick={() => addEvolutionEntry(athlete.id, { xpGained: 10, note: 'Treino registrado' })}
+          >
+            +10 XP
+          </button>
+        )}
       </div>
 
       <ul className="AthleteProfilePage-history">
