@@ -39,9 +39,14 @@ function HomePage() {
     <div className="Page Page-wide">
       <div className="HomePage-header">
         <h1 className="Page-title">Atletas</h1>
-        <Link className="btn-secondary" href="/athletes/new">
-          + Cadastrar atleta
-        </Link>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <Link className="btn-secondary" href="/coach/plans">
+            Meus planos de treino
+          </Link>
+          <Link className="btn-secondary" href="/athletes/new">
+            + Cadastrar atleta
+          </Link>
+        </div>
       </div>
 
       <div className="HomePage-filters">

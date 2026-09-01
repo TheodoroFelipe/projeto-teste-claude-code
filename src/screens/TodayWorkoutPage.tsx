@@ -8,8 +8,8 @@ import {
   MODALITY_LABELS,
   getCurrentWeekDay,
   getDayPlan,
+  getEffectiveWeeklyPlan,
   getWeekDayLabel,
-  getWeeklyPlanOrDefault,
   summarizePlannedExercise,
 } from '../utils/trainingPlan'
 import { getStreakDays } from '../utils/xp'
@@ -39,7 +39,7 @@ function TodayWorkoutPage() {
   const today = getCurrentWeekDay()
   const todayLabel = getWeekDayLabel(today)
   const todayDate = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })
-  const exercises = getDayPlan(getWeeklyPlanOrDefault(athlete), today).exercises
+  const exercises = getDayPlan(getEffectiveWeeklyPlan(athlete), today).exercises
   const streak = getStreakDays(athlete.evolutionHistory)
   const xpAvailable = exercises.reduce((total, exercise) => total + calcPlannedExerciseXp(exercise), 0)
 

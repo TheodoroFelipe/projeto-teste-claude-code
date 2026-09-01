@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import Link from 'next/link'
+import { acceptPlanInviteAction, declinePlanInviteAction } from '../app/actions/coachPlans'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import { readFileAsDataUrl } from '../utils/file'
@@ -20,14 +21,15 @@ function initials(name: string): string {
 }
 
 function UserProfilePage() {
-  const { currentUser, updateName, logout } = useAuth()
-  const { getAthleteById, updateAthlete } = useAthletes()
+  const { currentUser, updateName, logout, pendingInvites, removePendingInvite } = useAuth()
+  const { getAthleteById, updateAthlete, applyAthleteUpdate } = useAthletes()
   const [isEditing, setIsEditing] = useState(false)
   const [nameDraft, setNameDraft] = useState('')
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [photoError, setPhotoError] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+  const [inviteActionError, setInviteActionError] = useState<string | null>(null)
 
   if (!currentUser) return null
 
@@ -104,6 +106,27 @@ function UserProfilePage() {
     setPhotoDataUrl(null)
   }
 
+  async function handleAcceptInvite(inviteId: string) {
+    setInviteActionError(null)
+    const result = await acceptPlanInviteAction(inviteId)
+    if (!result.ok) {
+      setInviteActionError(result.error)
+      return
+    }
+    removePendingInvite(inviteId)
+    if (result.athlete) applyAthleteUpdate(result.athlete)
+  }
+
+  async function handleDeclineInvite(inviteId: string) {
+    setInviteActionError(null)
+    const result = await declinePlanInviteAction(inviteId)
+    if (!result.ok) {
+      setInviteActionError(result.error)
+      return
+    }
+    removePendingInvite(inviteId)
+  }
+
   return (
     <div className="Page">
       <div className="UserProfilePage-hero">
@@ -162,6 +185,30 @@ function UserProfilePage() {
           </>
         )}
       </div>
+
+      {pendingInvites.length > 0 && (
+        <div className="card">
+          <div className="section-title" style={{ marginBottom: 10 }}>
+            Convites de treino
+          </div>
+          {inviteActionError && <p className="field-error">{inviteActionError}</p>}
+          {pendingInvites.map((invite) => (
+            <div key={invite.id} className="UserProfilePage-timelineRow">
+              <span className="UserProfilePage-timelineNote">
+                {invite.coachName} convidou você para o plano &quot;{invite.planName}&quot;
+              </span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button type="button" className="btn-secondary" onClick={() => handleAcceptInvite(invite.id)}>
+                  Aceitar
+                </button>
+                <button type="button" className="btn-ghost" onClick={() => handleDeclineInvite(invite.id)}>
+                  Recusar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="card">
         <div className="level-row">

@@ -7,6 +7,7 @@ import NavBar from '../components/NavBar'
 import { useAuth } from '../hooks/useAuth'
 import type { Athlete } from '../types/athlete'
 import type { PublicUser } from '../types/user'
+import type { PlanInvite } from '../types/coachPlan'
 
 function AppShell({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth()
@@ -23,11 +24,12 @@ interface ProvidersProps {
   children: ReactNode
   initialUser: PublicUser | null
   initialAthletes: Athlete[]
+  initialPendingInvites: PlanInvite[]
 }
 
-export function Providers({ children, initialUser, initialAthletes }: ProvidersProps) {
+export function Providers({ children, initialUser, initialAthletes, initialPendingInvites }: ProvidersProps) {
   return (
-    <AuthProvider initialUser={initialUser}>
+    <AuthProvider initialUser={initialUser} initialPendingInvites={initialPendingInvites}>
       <AthleteProvider initialAthletes={initialAthletes}>
         <AppShell>{children}</AppShell>
       </AthleteProvider>

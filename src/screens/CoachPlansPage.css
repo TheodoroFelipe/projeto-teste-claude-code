@@ -1,0 +1,29 @@
+.CoachPlansPage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.CoachPlansPage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.CoachPlansPage-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.CoachPlansPage-itemName {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.CoachPlansPage-inviteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

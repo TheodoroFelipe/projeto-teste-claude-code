@@ -23,6 +23,7 @@ interface DayPlanEditorProps {
   onAdd: (exercise: PlannedExercise) => void
   onEdit: (exercise: PlannedExercise) => void
   onRemove: (exerciseId: string) => void
+  editable?: boolean
 }
 
 function exerciseToFieldsValue(exercise: PlannedExercise): PlannedExerciseFieldsValue {
@@ -88,7 +89,7 @@ function buildExercise(
   }
 }
 
-function DayPlanEditor({ dayLabel, exercises, onAdd, onEdit, onRemove }: DayPlanEditorProps) {
+function DayPlanEditor({ dayLabel, exercises, onAdd, onEdit, onRemove, editable = true }: DayPlanEditorProps) {
   const [modality, setModality] = useState<Modality>('musculacao')
   const [name, setName] = useState('')
   const [fields, setFields] = useState<PlannedExerciseFieldsValue>(EMPTY_FIELDS)
@@ -156,83 +157,86 @@ function DayPlanEditor({ dayLabel, exercises, onAdd, onEdit, onRemove }: DayPlan
                 {MODALITY_LABELS[exercise.modality]} · {summarizePlannedExercise(exercise)}
               </div>
             </div>
-            <div className="DayPlanEditor-itemActions">
-              <button
-                type="button"
-                className="DayPlanEditor-editButton"
-                onClick={() => startEdit(exercise)}
-                aria-label={`Editar ${exercise.name}`}
-              >
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 20h9" />
-                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="DayPlanEditor-removeButton"
-                onClick={() => onRemove(exercise.id)}
-                aria-label={`Remover ${exercise.name}`}
-              >
-                ✕
-              </button>
-            </div>
+            {editable && (
+              <div className="DayPlanEditor-itemActions">
+                <button
+                  type="button"
+                  className="DayPlanEditor-editButton"
+                  onClick={() => startEdit(exercise)}
+                  aria-label={`Editar ${exercise.name}`}
+                >
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className="DayPlanEditor-removeButton"
+                  onClick={() => onRemove(exercise.id)}
+                  aria-label={`Remover ${exercise.name}`}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
         ))}
 
-        {isAdding ? (
-          <form className="DayPlanEditor-form" onSubmit={handleSubmit}>
-            <div className="section-title">{editingId ? 'Editar exercício' : 'Novo exercício'}</div>
-            <div className="field-group">
-              <label htmlFor="new-exercise-name">Nome do exercício</label>
-              <input
-                id="new-exercise-name"
-                type="text"
-                required
-                autoFocus
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </div>
-            <div className="field-group">
-              <label htmlFor="new-exercise-modality">Modalidade</label>
-              <select
-                id="new-exercise-modality"
-                value={modality}
-                onChange={(event) => {
-                  const nextModality = event.target.value as Modality
-                  setModality(nextModality)
-                  if (nextModality === 'natacao') {
-                    setFields((prev) => ({ ...prev, distance: '1000' }))
-                  } else if (nextModality === 'corrida' || nextModality === 'ciclismo') {
-                    setFields((prev) => ({ ...prev, distance: '5' }))
-                  }
-                }}
-              >
-                {MODALITY_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {MODALITY_LABELS[option]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="DayPlanEditor-fieldsRow">
-              <PlannedExerciseFields modality={modality} value={fields} onChange={setFields} />
-            </div>
-            <div className="DayPlanEditor-formActions">
-              <button type="submit" className="btn-secondary">
-                {editingId ? 'Salvar alterações' : 'Adicionar'}
-              </button>
-              <button type="button" className="btn-ghost" onClick={resetForm}>
-                Cancelar
-              </button>
-            </div>
-          </form>
-        ) : (
-          <button type="button" className="DayPlanEditor-addButton" onClick={startAdd}>
-            + Adicionar exercício
-          </button>
-        )}
+        {editable &&
+          (isAdding ? (
+            <form className="DayPlanEditor-form" onSubmit={handleSubmit}>
+              <div className="section-title">{editingId ? 'Editar exercício' : 'Novo exercício'}</div>
+              <div className="field-group">
+                <label htmlFor="new-exercise-name">Nome do exercício</label>
+                <input
+                  id="new-exercise-name"
+                  type="text"
+                  required
+                  autoFocus
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </div>
+              <div className="field-group">
+                <label htmlFor="new-exercise-modality">Modalidade</label>
+                <select
+                  id="new-exercise-modality"
+                  value={modality}
+                  onChange={(event) => {
+                    const nextModality = event.target.value as Modality
+                    setModality(nextModality)
+                    if (nextModality === 'natacao') {
+                      setFields((prev) => ({ ...prev, distance: '1000' }))
+                    } else if (nextModality === 'corrida' || nextModality === 'ciclismo') {
+                      setFields((prev) => ({ ...prev, distance: '5' }))
+                    }
+                  }}
+                >
+                  {MODALITY_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {MODALITY_LABELS[option]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="DayPlanEditor-fieldsRow">
+                <PlannedExerciseFields modality={modality} value={fields} onChange={setFields} />
+              </div>
+              <div className="DayPlanEditor-formActions">
+                <button type="submit" className="btn-secondary">
+                  {editingId ? 'Salvar alterações' : 'Adicionar'}
+                </button>
+                <button type="button" className="btn-ghost" onClick={resetForm}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          ) : (
+            <button type="button" className="DayPlanEditor-addButton" onClick={startAdd}>
+              + Adicionar exercício
+            </button>
+          ))}
       </div>
     </div>
   )

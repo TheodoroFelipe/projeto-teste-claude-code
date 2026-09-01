@@ -51,3 +51,38 @@ export const bodyMeasurements = pgTable('body_measurements', {
   beltCm: doublePrecision('belt_cm'),
   hipCm: doublePrecision('hip_cm'),
 })
+
+export const coachPlans = pgTable('coach_plans', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  coachUserId: uuid('coach_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  weeklyPlan: jsonb('weekly_plan').$type<WeeklyPlan>().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
+export const planInvites = pgTable('plan_invites', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  planId: uuid('plan_id')
+    .notNull()
+    .references(() => coachPlans.id, { onDelete: 'cascade' }),
+  athleteEmail: text('athlete_email').notNull(),
+  status: text('status', { enum: ['pending', 'accepted', 'declined'] }).notNull().default('pending'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
+export const coachAthleteLinks = pgTable('coach_athlete_links', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  coachUserId: uuid('coach_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  athleteId: uuid('athlete_id')
+    .notNull()
+    .unique()
+    .references(() => athletes.id, { onDelete: 'cascade' }),
+  planId: uuid('plan_id')
+    .notNull()
+    .references(() => coachPlans.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})

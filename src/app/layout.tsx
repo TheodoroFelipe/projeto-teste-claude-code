@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { JetBrains_Mono, Manrope, Sora } from 'next/font/google'
 import { Providers } from './providers'
 import { listAthletesAction } from './actions/athletes'
+import { listPendingInvitesForCurrentUserAction } from './actions/coachPlans'
 import { getCurrentUser } from '../lib/session'
 
 import '../index.css'
@@ -14,6 +15,7 @@ import '../components/ExerciseLogger.css'
 import '../components/TrendLineChart.css'
 import '../screens/AthleteProfilePage.css'
 import '../screens/BodyMeasurementsPage.css'
+import '../screens/CoachPlansPage.css'
 import '../screens/HomePage.css'
 import '../screens/LoginPage.css'
 import '../screens/RankingPage.css'
@@ -33,12 +35,16 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [initialUser, initialAthletes] = await Promise.all([getCurrentUser(), listAthletesAction()])
+  const [initialUser, initialAthletes, initialPendingInvites] = await Promise.all([
+    getCurrentUser(),
+    listAthletesAction(),
+    listPendingInvitesForCurrentUserAction(),
+  ])
 
   return (
     <html lang="pt-BR" className={`${sora.variable} ${manrope.variable} ${jetbrainsMono.variable}`}>
       <body>
-        <Providers initialUser={initialUser} initialAthletes={initialAthletes}>
+        <Providers initialUser={initialUser} initialAthletes={initialAthletes} initialPendingInvites={initialPendingInvites}>
           {children}
         </Providers>
       </body>

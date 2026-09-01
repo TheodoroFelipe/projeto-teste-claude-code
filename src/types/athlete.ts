@@ -1,4 +1,5 @@
 import type { WeeklyPlan } from './trainingPlan'
+import type { AssignedCoachPlan } from './coachPlan'
 
 export interface EvolutionEntry {
   id: string
@@ -34,6 +35,7 @@ export interface Athlete {
   evolutionHistory: EvolutionEntry[]
   weeklyPlan?: WeeklyPlan
   measurements?: BodyMeasurementEntry[]
+  assignedCoach?: AssignedCoachPlan
 }
 
 export interface NewAthleteInput {

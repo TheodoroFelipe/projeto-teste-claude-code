@@ -20,6 +20,7 @@ export interface AthleteContextValue {
   addEvolutionEntry: (athleteId: string, input: NewEvolutionEntryInput) => Promise<Athlete>
   updateWeeklyPlan: (athleteId: string, weeklyPlan: WeeklyPlan) => Promise<Athlete>
   addMeasurementEntry: (athleteId: string, input: NewBodyMeasurementInput) => Promise<Athlete>
+  applyAthleteUpdate: (athlete: Athlete) => void
 }
 
 export const AthleteContext = createContext<AthleteContextValue | undefined>(undefined)
@@ -66,6 +67,10 @@ function AthleteProvider({ children, initialAthletes }: AthleteProviderProps) {
     return updated
   }
 
+  function applyAthleteUpdate(athlete: Athlete): void {
+    setAthletes((prev) => prev.map((existing) => (existing.id === athlete.id ? athlete : existing)))
+  }
+
   return (
     <AthleteContext.Provider
       value={{
@@ -76,6 +81,7 @@ function AthleteProvider({ children, initialAthletes }: AthleteProviderProps) {
         addEvolutionEntry,
         updateWeeklyPlan,
         addMeasurementEntry,
+        applyAthleteUpdate,
       }}
     >
       {children}

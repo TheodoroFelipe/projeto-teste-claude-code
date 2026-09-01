@@ -6,7 +6,13 @@ import { useParams, useRouter } from 'next/navigation'
 import DayPlanEditor from '../components/DayPlanEditor'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
-import { WEEK_DAYS, getCurrentWeekDay, getDayPlan, getWeeklyPlanOrDefault } from '../utils/trainingPlan'
+import {
+  WEEK_DAYS,
+  getCurrentWeekDay,
+  getDayPlan,
+  getEffectiveWeeklyPlan,
+  isPlanCoachManaged,
+} from '../utils/trainingPlan'
 import type { PlannedExercise, WeeklyPlan } from '../types/trainingPlan'
 
 const SHORT_LABELS = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM']
@@ -53,7 +59,8 @@ function TrainingPlanPage() {
   }
 
   const currentAthlete = athlete
-  const weeklyPlan = draftPlan ?? getWeeklyPlanOrDefault(currentAthlete)
+  const coachManaged = isPlanCoachManaged(currentAthlete)
+  const weeklyPlan = coachManaged ? getEffectiveWeeklyPlan(currentAthlete) : (draftPlan ?? getEffectiveWeeklyPlan(currentAthlete))
   const dates = currentWeekDates()
 
   function handleAdd(dayIndex: number, exercise: PlannedExercise) {
@@ -106,6 +113,12 @@ function TrainingPlanPage() {
         </span>
       </div>
 
+      {coachManaged && (
+        <p className="Page-empty">
+          Plano definido pelo treinador {currentAthlete.assignedCoach?.coachName} — somente leitura.
+        </p>
+      )}
+
       <div className="TrainingPlanPage-dayRow">
         {WEEK_DAYS.map(({ day }, index) => {
           const hasExercises = getDayPlan(weeklyPlan, day).exercises.length > 0
@@ -131,11 +144,14 @@ function TrainingPlanPage() {
         onAdd={(exercise) => handleAdd(selectedDayIndex, exercise)}
         onEdit={(exercise) => handleEdit(selectedDayIndex, exercise)}
         onRemove={(exerciseId) => handleRemove(selectedDayIndex, exerciseId)}
+        editable={!coachManaged}
       />
 
-      <button type="button" className="btn-primary" onClick={handleSave}>
-        SALVAR PLANO
-      </button>
+      {!coachManaged && (
+        <button type="button" className="btn-primary" onClick={handleSave}>
+          SALVAR PLANO
+        </button>
+      )}
     </div>
   )
 }

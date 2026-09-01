@@ -66,6 +66,14 @@ export function getWeeklyPlanOrDefault(athlete: Athlete): WeeklyPlan {
   return athlete.weeklyPlan ?? createEmptyWeeklyPlan()
 }
 
+export function getEffectiveWeeklyPlan(athlete: Athlete): WeeklyPlan {
+  return athlete.assignedCoach?.weeklyPlan ?? getWeeklyPlanOrDefault(athlete)
+}
+
+export function isPlanCoachManaged(athlete: Athlete): boolean {
+  return Boolean(athlete.assignedCoach)
+}
+
 export function getDayPlan(weeklyPlan: WeeklyPlan, day: WeekDay): DayPlan {
   return weeklyPlan.find((entry) => entry.day === day) ?? { day, exercises: [] }
 }

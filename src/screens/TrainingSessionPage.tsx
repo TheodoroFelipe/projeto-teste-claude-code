@@ -11,9 +11,9 @@ import {
   formatDuration,
   getCurrentWeekDay,
   getDayPlan,
+  getEffectiveWeeklyPlan,
   getUnitCount,
   getWeekDayLabel,
-  getWeeklyPlanOrDefault,
 } from '../utils/trainingPlan'
 import type { PlannedExercise, WeekDay } from '../types/trainingPlan'
 
@@ -71,7 +71,7 @@ function TrainingSessionPage() {
   }
 
   const currentAthlete = athlete
-  const weeklyPlan = getWeeklyPlanOrDefault(currentAthlete)
+  const weeklyPlan = getEffectiveWeeklyPlan(currentAthlete)
   const exercises = getDayPlan(weeklyPlan, selectedDay).exercises
   const currentExercise = exercises[exerciseIndex]
   const isLastExercise = exerciseIndex === exercises.length - 1

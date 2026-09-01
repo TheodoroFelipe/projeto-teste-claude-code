@@ -50,7 +50,7 @@ function PerfilIcon() {
 }
 
 function NavBar() {
-  const { currentUser } = useAuth()
+  const { currentUser, pendingInvites } = useAuth()
   const pathname = usePathname()
 
   if (!currentUser) return null
@@ -73,7 +73,23 @@ function NavBar() {
           {items.map((item) => (
             <li key={item.to}>
               <Link href={item.to} className={`NavBar-item${pathname === item.to ? ' active' : ''}`}>
-                {item.icon}
+                <span style={{ position: 'relative', display: 'inline-flex' }}>
+                  {item.icon}
+                  {item.to === '/profile' && pendingInvites.length > 0 && (
+                    <span
+                      aria-label={`${pendingInvites.length} convite(s) pendente(s)`}
+                      style={{
+                        position: 'absolute',
+                        top: -2,
+                        right: -4,
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        background: 'var(--coral)',
+                      }}
+                    />
+                  )}
+                </span>
                 {item.label}
               </Link>
             </li>
