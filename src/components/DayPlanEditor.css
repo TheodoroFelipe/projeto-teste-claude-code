@@ -57,9 +57,17 @@
   margin-top: 2px;
 }
 
+.DayPlanEditor-itemActions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.DayPlanEditor-editButton,
 .DayPlanEditor-removeButton {
   width: 26px;
   height: 26px;
+  padding: 0;
   border-radius: 8px;
   border: none;
   background: none;
@@ -67,6 +75,13 @@
   cursor: pointer;
   flex-shrink: 0;
   font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.DayPlanEditor-editButton:hover {
+  color: var(--lime);
 }
 
 .DayPlanEditor-removeButton:hover {

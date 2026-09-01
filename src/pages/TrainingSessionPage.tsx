@@ -8,11 +8,18 @@ import {
   formatDuration,
   getCurrentWeekDay,
   getDayPlan,
+  getUnitCount,
   getWeekDayLabel,
   getWeeklyPlanOrDefault,
 } from '../utils/trainingPlan'
-import type { WeekDay } from '../types/trainingPlan'
+import type { PlannedExercise, WeekDay } from '../types/trainingPlan'
 import './TrainingSessionPage.css'
+
+function isExerciseComplete(exercise: PlannedExercise, done: boolean[] | undefined): boolean {
+  if (!done || done.length === 0) return false
+  if (exercise.modality === 'musculacao') return done.every(Boolean)
+  return done[0] === true
+}
 
 function TrainingSessionPage() {
   const { athleteId } = useParams<{ athleteId: string }>()
@@ -23,8 +30,9 @@ function TrainingSessionPage() {
 
   const [selectedDay, setSelectedDay] = useState<WeekDay>(getCurrentWeekDay())
   const [exerciseIndex, setExerciseIndex] = useState(0)
-  const [bankedXp, setBankedXp] = useState(0)
-  const [liveXp, setLiveXp] = useState(0)
+  const [xpByIndex, setXpByIndex] = useState<Record<number, number>>({})
+  const [doneByIndex, setDoneByIndex] = useState<Record<number, boolean[]>>({})
+  const [showIncompleteWarning, setShowIncompleteWarning] = useState(false)
   const [bursting, setBursting] = useState(false)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
 
@@ -32,6 +40,10 @@ function TrainingSessionPage() {
     const interval = window.setInterval(() => setElapsedSeconds((prev) => prev + 1), 1000)
     return () => window.clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    setShowIncompleteWarning(false)
+  }, [exerciseIndex])
 
   if (!athlete) {
     return (
@@ -55,13 +67,16 @@ function TrainingSessionPage() {
   const weeklyPlan = getWeeklyPlanOrDefault(currentAthlete)
   const exercises = getDayPlan(weeklyPlan, selectedDay).exercises
   const currentExercise = exercises[exerciseIndex]
-  const sessionXp = bankedXp + liveXp
+  const isLastExercise = exerciseIndex === exercises.length - 1
+  const sessionXp = Object.values(xpByIndex).reduce((total, xp) => total + xp, 0)
+  const isCurrentComplete = currentExercise ? isExerciseComplete(currentExercise, doneByIndex[exerciseIndex]) : true
 
   function handleDayChange(day: WeekDay) {
     setSelectedDay(day)
     setExerciseIndex(0)
-    setBankedXp(0)
-    setLiveXp(0)
+    setXpByIndex({})
+    setDoneByIndex({})
+    setShowIncompleteWarning(false)
   }
 
   function handleUnitCompleted() {
@@ -73,29 +88,43 @@ function TrainingSessionPage() {
     navigate(`/athletes/${currentAthlete.id}`)
   }
 
-  function finishOrAdvance(xpToBank: number) {
-    const isLast = exerciseIndex === exercises.length - 1
-    if (isLast) {
-      if (xpToBank > 0) {
+  function finishOrAdvance() {
+    if (isLastExercise) {
+      if (sessionXp > 0) {
         addEvolutionEntry(currentAthlete.id, {
-          xpGained: xpToBank,
+          xpGained: sessionXp,
           note: `${getWeekDayLabel(selectedDay)} — ${exercises.map((exercise) => exercise.name).join(', ')}`,
         })
       }
       navigate(`/athletes/${currentAthlete.id}`)
     } else {
-      setBankedXp(xpToBank)
-      setLiveXp(0)
       setExerciseIndex((prev) => prev + 1)
     }
   }
 
-  function handleAdvance() {
-    finishOrAdvance(bankedXp + liveXp)
+  function handleNextClick() {
+    if (!isCurrentComplete && !showIncompleteWarning) {
+      setShowIncompleteWarning(true)
+      return
+    }
+    setShowIncompleteWarning(false)
+    finishOrAdvance()
+  }
+
+  function handleBack() {
+    setExerciseIndex((prev) => Math.max(prev - 1, 0))
   }
 
   function handleSkip() {
-    finishOrAdvance(bankedXp)
+    if (currentExercise) {
+      setXpByIndex((prev) => ({ ...prev, [exerciseIndex]: 0 }))
+      setDoneByIndex((prev) => ({
+        ...prev,
+        [exerciseIndex]: Array.from({ length: getUnitCount(currentExercise) }, () => false),
+      }))
+    }
+    setShowIncompleteWarning(false)
+    finishOrAdvance()
   }
 
   return (
@@ -149,7 +178,9 @@ function TrainingSessionPage() {
         <ExerciseLogger
           key={currentExercise.id}
           exercise={currentExercise}
-          onXpChange={setLiveXp}
+          initialDone={doneByIndex[exerciseIndex]}
+          onXpChange={(xp) => setXpByIndex((prev) => ({ ...prev, [exerciseIndex]: xp }))}
+          onDoneChange={(done) => setDoneByIndex((prev) => ({ ...prev, [exerciseIndex]: done }))}
           onUnitCompleted={handleUnitCompleted}
         />
       ) : (
@@ -161,10 +192,29 @@ function TrainingSessionPage() {
 
       {currentExercise && (
         <div className="TrainingSessionPage-footer">
-          <button type="button" className="btn-primary" onClick={handleAdvance}>
-            {exerciseIndex === exercises.length - 1 ? 'FINALIZAR SESSÃO' : 'PRÓXIMO EXERCÍCIO'}
+          {showIncompleteWarning && (
+            <div className="TrainingSessionPage-warning">
+              <span>Você ainda não concluiu todas as séries deste exercício.</span>
+              <div className="TrainingSessionPage-warningActions">
+                <button type="button" className="btn-secondary" onClick={handleNextClick}>
+                  Avançar mesmo assim
+                </button>
+                <button type="button" className="btn-ghost" onClick={() => setShowIncompleteWarning(false)}>
+                  Continuar treino
+                </button>
+              </div>
+            </div>
+          )}
+
+          {exerciseIndex > 0 && (
+            <button type="button" className="btn-ghost" onClick={handleBack}>
+              ← Exercício anterior
+            </button>
+          )}
+          <button type="button" className="btn-primary" onClick={handleNextClick}>
+            {isLastExercise ? 'FINALIZAR SESSÃO' : 'PRÓXIMO EXERCÍCIO'}
           </button>
-          {exerciseIndex < exercises.length - 1 && (
+          {!isLastExercise && (
             <button type="button" className="btn-ghost" onClick={handleSkip}>
               Pular exercício
             </button>

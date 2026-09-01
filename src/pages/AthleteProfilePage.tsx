@@ -7,7 +7,7 @@ import './AthleteProfilePage.css'
 
 function AthleteProfilePage() {
   const { athleteId } = useParams<{ athleteId: string }>()
-  const { getAthleteById, addEvolutionEntry } = useAthletes()
+  const { getAthleteById } = useAthletes()
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
   const canManage = useCanManageAthlete(athleteId)
 
@@ -62,15 +62,6 @@ function AthleteProfilePage() {
         <div className="level-caption">
           {currentLevelXp} / {currentLevelXp + xpToNextLevel} XP para o próximo nível
         </div>
-        {canManage && (
-          <button
-            type="button"
-            className="btn-secondary AthleteProfilePage-xpButton"
-            onClick={() => addEvolutionEntry(athlete.id, { xpGained: 10, note: 'Treino registrado' })}
-          >
-            +10 XP
-          </button>
-        )}
       </div>
 
       <div>

@@ -62,6 +62,16 @@ function TrainingPlanPage() {
     )
   }
 
+  function handleEdit(dayIndex: number, exercise: PlannedExercise) {
+    setDraftPlan(
+      weeklyPlan.map((dayPlan, index) =>
+        index === dayIndex
+          ? { ...dayPlan, exercises: dayPlan.exercises.map((e) => (e.id === exercise.id ? exercise : e)) }
+          : dayPlan,
+      ),
+    )
+  }
+
   function handleRemove(dayIndex: number, exerciseId: string) {
     setDraftPlan(
       weeklyPlan.map((dayPlan, index) =>
@@ -117,6 +127,7 @@ function TrainingPlanPage() {
         dayLabel={WEEK_DAYS[selectedDayIndex].label}
         exercises={selectedDayPlan.exercises}
         onAdd={(exercise) => handleAdd(selectedDayIndex, exercise)}
+        onEdit={(exercise) => handleEdit(selectedDayIndex, exercise)}
         onRemove={(exerciseId) => handleRemove(selectedDayIndex, exerciseId)}
       />
 

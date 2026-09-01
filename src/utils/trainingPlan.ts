@@ -70,6 +70,10 @@ export function getDayPlan(weeklyPlan: WeeklyPlan, day: WeekDay): DayPlan {
   return weeklyPlan.find((entry) => entry.day === day) ?? { day, exercises: [] }
 }
 
+export function getUnitCount(exercise: PlannedExercise): number {
+  return exercise.modality === 'musculacao' ? exercise.targetSets : 1
+}
+
 export function formatDuration(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60)
   const seconds = totalSeconds % 60

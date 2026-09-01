@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { calcPlannedExerciseXp } from '../utils/plannedExerciseXp'
-import { formatDuration, summarizePlannedExercise } from '../utils/trainingPlan'
+import { formatDuration, getUnitCount, summarizePlannedExercise } from '../utils/trainingPlan'
 import type { PlannedExercise } from '../types/trainingPlan'
 import './ExerciseLogger.css'
 
@@ -8,12 +8,10 @@ const REST_DURATION_SECONDS = 150
 
 interface ExerciseLoggerProps {
   exercise: PlannedExercise
+  initialDone?: boolean[]
   onXpChange: (xp: number) => void
+  onDoneChange: (done: boolean[]) => void
   onUnitCompleted: () => void
-}
-
-function unitCount(exercise: PlannedExercise): number {
-  return exercise.modality === 'musculacao' ? exercise.targetSets : 1
 }
 
 function CheckIcon() {
@@ -24,8 +22,10 @@ function CheckIcon() {
   )
 }
 
-function ExerciseLogger({ exercise, onXpChange, onUnitCompleted }: ExerciseLoggerProps) {
-  const [doneList, setDoneList] = useState<boolean[]>(() => Array.from({ length: unitCount(exercise) }, () => false))
+function ExerciseLogger({ exercise, initialDone, onXpChange, onDoneChange, onUnitCompleted }: ExerciseLoggerProps) {
+  const [doneList, setDoneList] = useState<boolean[]>(
+    () => initialDone ?? Array.from({ length: getUnitCount(exercise) }, () => false),
+  )
   const [restSeconds, setRestSeconds] = useState<number | null>(null)
   const isStrength = exercise.modality === 'musculacao'
   const perUnitXp = calcPlannedExerciseXp(exercise)
@@ -42,6 +42,7 @@ function ExerciseLogger({ exercise, onXpChange, onUnitCompleted }: ExerciseLogge
     const wasDone = doneList[index]
     const nextDoneList = doneList.map((value, i) => (i === index ? !value : value))
     setDoneList(nextDoneList)
+    onDoneChange(nextDoneList)
     onXpChange(nextDoneList.filter(Boolean).length * perUnitXp)
 
     if (!wasDone) {
@@ -51,7 +52,11 @@ function ExerciseLogger({ exercise, onXpChange, onUnitCompleted }: ExerciseLogge
   }
 
   function handleAddSet() {
-    setDoneList((prev) => [...prev, false])
+    setDoneList((prev) => {
+      const next = [...prev, false]
+      onDoneChange(next)
+      return next
+    })
   }
 
   const nextPendingIndex = doneList.findIndex((done) => !done)

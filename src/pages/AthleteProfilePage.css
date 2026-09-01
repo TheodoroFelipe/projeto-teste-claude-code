@@ -10,10 +10,6 @@
   gap: 10px;
 }
 
-.AthleteProfilePage-xpButton {
-  align-self: flex-start;
-}
-
 .AthleteProfilePage-history {
   list-style: none;
   margin: 0;
