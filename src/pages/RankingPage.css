@@ -20,6 +20,10 @@
   font-size: 14px;
 }
 
+.RankingPage-avatarImg {
+  object-fit: cover;
+}
+
 .RankingPage-podiumAvatar-md {
   width: 52px;
   height: 52px;

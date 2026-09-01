@@ -27,7 +27,7 @@ function AthleteCard({ athlete }: AthleteCardProps) {
         <h2 className="AthleteCard-name">{name}</h2>
         <p className="AthleteCard-sport">{sport}</p>
         <ul className="AthleteCard-details">
-          <li>Time: {team}</li>
+          {team && <li>Time: {team}</li>}
           <li>Nacionalidade: {nationality}</li>
           {age !== undefined && <li>Idade: {age}</li>}
         </ul>

@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import type { ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
+import { readFileAsDataUrl } from '../utils/file'
 import { getLevelProgress, getStreakDays, getTotalXp } from '../utils/xp'
 import './UserProfilePage.css'
+
+const MAX_PHOTO_BYTES = 4 * 1024 * 1024
 
 function initials(name: string): string {
   return name
@@ -16,10 +20,13 @@ function initials(name: string): string {
 
 function UserProfilePage() {
   const { currentUser, updateName, logout } = useAuth()
-  const { getAthleteById } = useAthletes()
-  const [isEditingName, setIsEditingName] = useState(false)
+  const { getAthleteById, updateAthlete } = useAthletes()
+  const [isEditing, setIsEditing] = useState(false)
   const [nameDraft, setNameDraft] = useState('')
+  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
+  const [photoError, setPhotoError] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [showHistory, setShowHistory] = useState(false)
 
   if (!currentUser) return null
 
@@ -32,51 +39,127 @@ function UserProfilePage() {
   const sortedHistory = [...evolutionHistory]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 6)
+  const displayedPhoto = photoDataUrl ?? athlete?.photoUrl
 
   function startEditing() {
     setNameDraft(currentUser!.name)
+    setPhotoDataUrl(null)
+    setPhotoError(null)
     setError(null)
-    setIsEditingName(true)
+    setIsEditing(true)
   }
 
-  async function handleSave() {
-    const result = await updateName(nameDraft)
-    if (result.ok) {
-      setIsEditingName(false)
-    } else {
-      setError(result.error)
+  function cancelEditing() {
+    setIsEditing(false)
+    setPhotoDataUrl(null)
+    setPhotoError(null)
+    setError(null)
+  }
+
+  async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setPhotoError(null)
+    if (file.size > MAX_PHOTO_BYTES) {
+      setPhotoError('A imagem deve ter no máximo 4 MB.')
+      event.target.value = ''
+      return
     }
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file)
+      setPhotoDataUrl(dataUrl)
+    } catch {
+      setPhotoError('Não foi possível carregar a imagem.')
+    }
+  }
+
+  async function handleSaveProfile() {
+    const trimmedName = nameDraft.trim()
+    if (!trimmedName) {
+      setError('Nome é obrigatório.')
+      return
+    }
+
+    const nameResult = await updateName(trimmedName)
+    if (!nameResult.ok) {
+      setError(nameResult.error)
+      return
+    }
+
+    if (athlete && photoDataUrl) {
+      updateAthlete(athlete.id, {
+        name: athlete.name,
+        sport: athlete.sport,
+        team: athlete.team,
+        nationality: athlete.nationality,
+        age: athlete.age,
+        photoUrl: photoDataUrl,
+      })
+    }
+
+    setIsEditing(false)
+    setPhotoDataUrl(null)
   }
 
   return (
     <div className="Page">
       <div className="UserProfilePage-hero">
-        <span className="avatar UserProfilePage-avatarLg">{initials(currentUser.name)}</span>
+        {displayedPhoto ? (
+          <img className="avatar UserProfilePage-avatarLg UserProfilePage-avatarImg" src={displayedPhoto} alt={currentUser.name} />
+        ) : (
+          <span className="avatar UserProfilePage-avatarLg">{initials(currentUser.name)}</span>
+        )}
 
-        {isEditingName ? (
-          <div className="UserProfilePage-nameEdit">
-            <input value={nameDraft} onChange={(event) => setNameDraft(event.target.value)} />
-            <button type="button" className="btn-secondary" onClick={handleSave}>
-              Salvar
-            </button>
-            <button type="button" className="btn-ghost" onClick={() => setIsEditingName(false)}>
-              Cancelar
-            </button>
+        {isEditing ? (
+          <div className="UserProfilePage-editPanel">
+            {athlete && (
+              <div className="field-group">
+                <label htmlFor="profile-photo-input">Foto de perfil</label>
+                <input
+                  id="profile-photo-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                />
+                <span className="UserProfilePage-photoHint">Máximo de 4 MB.</span>
+                {photoError && <p className="field-error">{photoError}</p>}
+              </div>
+            )}
+            <div className="field-group">
+              <label htmlFor="profile-name-input">Nome</label>
+              <input
+                id="profile-name-input"
+                value={nameDraft}
+                onChange={(event) => setNameDraft(event.target.value)}
+              />
+            </div>
+            {error && <p className="field-error">{error}</p>}
+            <div className="UserProfilePage-editActions">
+              <button type="button" className="btn-secondary" onClick={handleSaveProfile}>
+                Salvar
+              </button>
+              <button type="button" className="btn-ghost" onClick={cancelEditing}>
+                Cancelar
+              </button>
+            </div>
           </div>
         ) : (
-          <button type="button" className="UserProfilePage-nameButton" onClick={startEditing}>
+          <>
             <span className="UserProfilePage-heroName">{currentUser.name}</span>
-          </button>
+            <span className="UserProfilePage-heroSub">
+              {athlete?.sport ?? currentUser.email}
+              {currentUser.role === 'coach' && ' · Treinador'}
+            </span>
+            <div className="UserProfilePage-heroChips">
+              <span className="chip">{currentUser.email}</span>
+            </div>
+            <button type="button" className="btn-secondary" onClick={startEditing}>
+              Editar perfil
+            </button>
+          </>
         )}
-        {error && <p className="field-error">{error}</p>}
-
-        <span className="UserProfilePage-heroSub">
-          {athlete?.sport ?? currentUser.email}
-          {currentUser.role === 'coach' && ' · Treinador'}
-        </span>
-        <div className="UserProfilePage-heroChips">
-          <span className="chip">{currentUser.email}</span>
-        </div>
       </div>
 
       <div className="card">
@@ -117,22 +200,30 @@ function UserProfilePage() {
       </div>
 
       <div>
-        <div className="section-title">Histórico de evolução</div>
-        <div className="card UserProfilePage-timeline">
-          {sortedHistory.length === 0 ? (
-            <p className="Page-empty">Nenhum registro de XP ainda.</p>
-          ) : (
-            sortedHistory.map((entry) => (
-              <div className="UserProfilePage-timelineRow" key={entry.id}>
-                <span className="UserProfilePage-timelineDate">
-                  {new Date(entry.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).toUpperCase()}
-                </span>
-                <span className="UserProfilePage-timelineNote">{entry.note ?? 'Treino registrado'}</span>
-                <span className="badge-lime">+{entry.xpGained} XP</span>
-              </div>
-            ))
-          )}
-        </div>
+        <button
+          type="button"
+          className="btn-secondary UserProfilePage-historyToggle"
+          onClick={() => setShowHistory((prev) => !prev)}
+        >
+          {showHistory ? 'Ocultar histórico de evolução' : 'Ver histórico de evolução'}
+        </button>
+        {showHistory && (
+          <div className="card UserProfilePage-timeline">
+            {sortedHistory.length === 0 ? (
+              <p className="Page-empty">Nenhum registro de XP ainda.</p>
+            ) : (
+              sortedHistory.map((entry) => (
+                <div className="UserProfilePage-timelineRow" key={entry.id}>
+                  <span className="UserProfilePage-timelineDate">
+                    {new Date(entry.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).toUpperCase()}
+                  </span>
+                  <span className="UserProfilePage-timelineNote">{entry.note ?? 'Treino registrado'}</span>
+                  <span className="badge-lime">+{entry.xpGained} XP</span>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       {athlete && (

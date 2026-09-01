@@ -16,13 +16,8 @@
   font-size: 26px;
 }
 
-.UserProfilePage-nameButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  color: inherit;
-  font-family: inherit;
+.UserProfilePage-avatarImg {
+  object-fit: cover;
 }
 
 .UserProfilePage-heroName {
@@ -31,10 +26,23 @@
   font-family: var(--font-heading);
 }
 
-.UserProfilePage-nameEdit {
+.UserProfilePage-editPanel {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 320px;
+  text-align: left;
+}
+
+.UserProfilePage-photoHint {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+.UserProfilePage-editActions {
+  display: flex;
+  gap: 10px;
 }
 
 .UserProfilePage-heroSub {
@@ -51,6 +59,10 @@
 .UserProfilePage-statTile {
   align-items: center;
   text-align: center;
+}
+
+.UserProfilePage-historyToggle {
+  width: 100%;
 }
 
 .UserProfilePage-timeline {

@@ -63,8 +63,8 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
       </div>
 
       <div className="field-group">
-        <label htmlFor="athlete-team">Time</label>
-        <input id="athlete-team" type="text" required value={team} onChange={(event) => setTeam(event.target.value)} />
+        <label htmlFor="athlete-team">Time (opcional)</label>
+        <input id="athlete-team" type="text" value={team} onChange={(event) => setTeam(event.target.value)} />
       </div>
 
       <div className="field-group">

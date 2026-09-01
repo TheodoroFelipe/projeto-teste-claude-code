@@ -53,7 +53,11 @@ function RankingPage() {
                 <li key={athlete.id}>
                   <Link className={`RankingPage-row${isMe ? ' me' : ''}`} to={`/athletes/${athlete.id}`}>
                     <span className="RankingPage-rankNum">{position}</span>
-                    <span className="avatar RankingPage-avatarSm">{initials(athlete.name)}</span>
+                    {athlete.photoUrl ? (
+                      <img className="avatar RankingPage-avatarSm RankingPage-avatarImg" src={athlete.photoUrl} alt={athlete.name} />
+                    ) : (
+                      <span className="avatar RankingPage-avatarSm">{initials(athlete.name)}</span>
+                    )}
                     <span className="RankingPage-rowInfo">
                       <span className="RankingPage-rowName">
                         {athlete.name}
@@ -76,7 +80,7 @@ function RankingPage() {
 }
 
 interface PodiumColumnProps {
-  entry?: { athlete: { id: string; name: string }; totalXp: number }
+  entry?: { athlete: { id: string; name: string; photoUrl?: string }; totalXp: number }
   place: 1 | 2 | 3
   size: 'md' | 'lg'
   crowned?: boolean
@@ -94,9 +98,17 @@ function PodiumColumn({ entry, place, size, crowned }: PodiumColumnProps) {
           <path d="M3 8l4 3 5-6 5 6 4-3-2 10H5L3 8z" />
         </svg>
       )}
-      <span className={`avatar RankingPage-podiumAvatar RankingPage-podiumAvatar-${size}${crowned ? ' crowned' : ''}`}>
-        {initials(entry.athlete.name)}
-      </span>
+      {entry.athlete.photoUrl ? (
+        <img
+          className={`avatar RankingPage-podiumAvatar RankingPage-podiumAvatar-${size} RankingPage-avatarImg${crowned ? ' crowned' : ''}`}
+          src={entry.athlete.photoUrl}
+          alt={entry.athlete.name}
+        />
+      ) : (
+        <span className={`avatar RankingPage-podiumAvatar RankingPage-podiumAvatar-${size}${crowned ? ' crowned' : ''}`}>
+          {initials(entry.athlete.name)}
+        </span>
+      )}
       <span className="RankingPage-podiumName">{entry.athlete.name}</span>
       <span className="RankingPage-podiumXp">{entry.totalXp.toLocaleString('pt-BR')} XP</span>
       <span className={`RankingPage-podiumBar${crowned ? ' crowned' : ''}`} style={{ height: barHeight }}>
