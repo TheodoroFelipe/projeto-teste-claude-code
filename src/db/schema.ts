@@ -9,6 +9,7 @@ export const athletes = pgTable('athletes', {
   nationality: text('nationality').notNull().default(''),
   photoUrl: text('photo_url'),
   age: integer('age'),
+  heightCm: doublePrecision('height_cm'),
   weeklyPlan: jsonb('weekly_plan').$type<WeeklyPlan>(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })

@@ -10,25 +10,24 @@ import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import type { BodyMeasurementEntry, NewBodyMeasurementInput } from '../types/athlete'
 
+type MeasurementFieldKey = 'weightKg' | 'armCm' | 'thighCm' | 'waistCm' | 'chestCm' | 'hipCm'
+
 interface FieldConfig {
-  key: keyof NewBodyMeasurementInput
+  key: MeasurementFieldKey
   label: string
   unit: string
 }
 
 const FIELDS: FieldConfig[] = [
   { key: 'weightKg', label: 'Peso', unit: 'kg' },
-  { key: 'heightCm', label: 'Altura', unit: 'cm' },
-  { key: 'age', label: 'Idade', unit: 'anos' },
   { key: 'armCm', label: 'Braço', unit: 'cm' },
   { key: 'thighCm', label: 'Coxa', unit: 'cm' },
   { key: 'waistCm', label: 'Cintura', unit: 'cm' },
   { key: 'chestCm', label: 'Peito', unit: 'cm' },
-  { key: 'beltCm', label: 'Cinturão', unit: 'cm' },
   { key: 'hipCm', label: 'Quadril', unit: 'cm' },
 ]
 
-const MEASUREMENT_FIELDS = FIELDS.filter((field) => field.key !== 'weightKg' && field.key !== 'heightCm' && field.key !== 'age')
+const MEASUREMENT_FIELDS = FIELDS.filter((field) => field.key !== 'weightKg')
 
 const CATEGORICAL_COLORS = ['#a3e635', '#fb923c', '#38bdf8', '#f472b6', '#c084fc', '#facc15']
 
@@ -40,17 +39,14 @@ const MEASUREMENT_SERIES: TrendChartSeries[] = MEASUREMENT_FIELDS.map((field, in
 
 const WEIGHT_SERIES: TrendChartSeries[] = [{ key: 'weightKg', label: 'Peso', color: CATEGORICAL_COLORS[0] }]
 
-type FormValues = Record<keyof NewBodyMeasurementInput, string>
+type FormValues = Record<MeasurementFieldKey, string>
 
 const EMPTY_VALUES: FormValues = {
   weightKg: '',
-  heightCm: '',
-  age: '',
   armCm: '',
   thighCm: '',
   waistCm: '',
   chestCm: '',
-  beltCm: '',
   hipCm: '',
 }
 
@@ -115,7 +111,6 @@ function BodyMeasurementsPage() {
       thighCm: entry.thighCm,
       waistCm: entry.waistCm,
       chestCm: entry.chestCm,
-      beltCm: entry.beltCm,
       hipCm: entry.hipCm,
     },
   }))
@@ -137,6 +132,7 @@ function BodyMeasurementsPage() {
   return (
     <div className="Page Page-wide">
       <h1 className="Page-title">Evolução física — {athlete.name}</h1>
+      {athlete.heightCm !== undefined && <p className="Page-eyebrow">Altura: {athlete.heightCm} cm</p>}
 
       <form className="card BodyMeasurementsPage-form" onSubmit={handleSubmit}>
         <div className="section-title">Registrar novas medidas</div>

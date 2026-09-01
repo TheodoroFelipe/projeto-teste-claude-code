@@ -14,7 +14,7 @@ function initials(name: string): string {
 }
 
 function AthleteCard({ athlete }: AthleteCardProps) {
-  const { name, sport, team, nationality, photoUrl, age } = athlete
+  const { name, sport, team, nationality, photoUrl, age, heightCm } = athlete
   return (
     <div className="AthleteCard">
       {photoUrl ? (
@@ -29,6 +29,7 @@ function AthleteCard({ athlete }: AthleteCardProps) {
           {team && <li>Time: {team}</li>}
           <li>Nacionalidade: {nationality}</li>
           {age !== undefined && <li>Idade: {age}</li>}
+          {heightCm !== undefined && <li>Altura: {heightCm} cm</li>}
         </ul>
       </div>
     </div>

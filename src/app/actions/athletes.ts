@@ -78,6 +78,7 @@ function assembleAthlete(
     nationality: row.nationality,
     photoUrl: row.photoUrl ?? undefined,
     age: row.age ?? undefined,
+    heightCm: row.heightCm ?? undefined,
     weeklyPlan: row.weeklyPlan ?? undefined,
     evolutionHistory: evolutionRows.filter((e) => e.athleteId === row.id).map(toEvolutionEntry),
     measurements: measurementRows.filter((m) => m.athleteId === row.id).map(toMeasurementEntry),
@@ -120,6 +121,7 @@ export async function addAthleteAction(input: NewAthleteInput): Promise<Athlete>
       nationality: input.nationality,
       photoUrl: input.photoUrl ?? null,
       age: input.age ?? null,
+      heightCm: input.heightCm ?? null,
     })
     .returning()
 
@@ -136,6 +138,7 @@ export async function updateAthleteAction(athleteId: string, input: NewAthleteIn
       nationality: input.nationality,
       photoUrl: input.photoUrl ?? null,
       age: input.age ?? null,
+      heightCm: input.heightCm ?? null,
     })
     .where(eq(athletes.id, athleteId))
 

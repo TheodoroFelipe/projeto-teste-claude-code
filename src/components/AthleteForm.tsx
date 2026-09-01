@@ -18,6 +18,7 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
   const [nationality, setNationality] = useState(initialValues?.nationality ?? '')
   const [photoUrl, setPhotoUrl] = useState(initialValues?.photoUrl ?? '')
   const [age, setAge] = useState(initialValues?.age !== undefined ? String(initialValues.age) : '')
+  const [heightCm, setHeightCm] = useState(initialValues?.heightCm !== undefined ? String(initialValues.heightCm) : '')
   const [photoError, setPhotoError] = useState<string | null>(null)
 
   async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
@@ -42,6 +43,7 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
       nationality: nationality.trim(),
       photoUrl: photoUrl || undefined,
       age: age.trim() ? Number(age) : undefined,
+      heightCm: heightCm.trim() ? Number(heightCm) : undefined,
     })
   }
 
@@ -89,6 +91,18 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
       <div className="field-group">
         <label htmlFor="athlete-age">Idade</label>
         <input id="athlete-age" type="number" min={0} value={age} onChange={(event) => setAge(event.target.value)} />
+      </div>
+
+      <div className="field-group">
+        <label htmlFor="athlete-height">Altura (cm)</label>
+        <input
+          id="athlete-height"
+          type="number"
+          min={0}
+          step="0.1"
+          value={heightCm}
+          onChange={(event) => setHeightCm(event.target.value)}
+        />
       </div>
 
       <button type="submit" className="btn-primary">

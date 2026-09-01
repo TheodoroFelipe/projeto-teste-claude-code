@@ -32,6 +32,7 @@ export interface Athlete {
   nationality: string
   photoUrl?: string
   age?: number
+  heightCm?: number
   evolutionHistory: EvolutionEntry[]
   weeklyPlan?: WeeklyPlan
   measurements?: BodyMeasurementEntry[]
@@ -45,6 +46,7 @@ export interface NewAthleteInput {
   nationality: string
   photoUrl?: string
   age?: number
+  heightCm?: number
 }
 
 export interface NewEvolutionEntryInput {
