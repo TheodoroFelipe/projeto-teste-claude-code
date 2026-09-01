@@ -1,6 +1,7 @@
+'use client'
+
 import { useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react'
-import './TrendLineChart.css'
 
 export interface TrendChartSeries {
   key: string

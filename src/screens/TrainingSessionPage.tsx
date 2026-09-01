@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import ExerciseLogger from '../components/ExerciseLogger'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
@@ -13,7 +16,6 @@ import {
   getWeeklyPlanOrDefault,
 } from '../utils/trainingPlan'
 import type { PlannedExercise, WeekDay } from '../types/trainingPlan'
-import './TrainingSessionPage.css'
 
 function isExerciseComplete(exercise: PlannedExercise, done: boolean[] | undefined): boolean {
   if (!done || done.length === 0) return false
@@ -24,7 +26,7 @@ function isExerciseComplete(exercise: PlannedExercise, done: boolean[] | undefin
 function TrainingSessionPage() {
   const { athleteId } = useParams<{ athleteId: string }>()
   const { getAthleteById, addEvolutionEntry } = useAthletes()
-  const navigate = useNavigate()
+  const router = useRouter()
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
   const canManage = useCanManageAthlete(athleteId)
 
@@ -35,21 +37,26 @@ function TrainingSessionPage() {
   const [showIncompleteWarning, setShowIncompleteWarning] = useState(false)
   const [bursting, setBursting] = useState(false)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const [warningResetForIndex, setWarningResetForIndex] = useState(exerciseIndex)
 
   useEffect(() => {
     const interval = window.setInterval(() => setElapsedSeconds((prev) => prev + 1), 1000)
     return () => window.clearInterval(interval)
   }, [])
 
-  useEffect(() => {
+  // Reset the incomplete-exercise warning whenever the current exercise changes.
+  // Adjusted during render (not in an effect) per React's guidance for state that
+  // depends on a prop/value change, avoiding an extra render pass.
+  if (warningResetForIndex !== exerciseIndex) {
+    setWarningResetForIndex(exerciseIndex)
     setShowIncompleteWarning(false)
-  }, [exerciseIndex])
+  }
 
   if (!athlete) {
     return (
       <div className="Page">
         <p className="Page-empty">Atleta não encontrado.</p>
-        <Link to="/">Voltar para a lista</Link>
+        <Link href="/">Voltar para a lista</Link>
       </div>
     )
   }
@@ -58,7 +65,7 @@ function TrainingSessionPage() {
     return (
       <div className="Page">
         <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
-        <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
+        <Link href={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
   }
@@ -85,7 +92,7 @@ function TrainingSessionPage() {
   }
 
   function handleClose() {
-    navigate(`/athletes/${currentAthlete.id}`)
+    router.push(`/athletes/${currentAthlete.id}`)
   }
 
   function finishOrAdvance() {
@@ -96,7 +103,7 @@ function TrainingSessionPage() {
           note: `${getWeekDayLabel(selectedDay)} — ${exercises.map((exercise) => exercise.name).join(', ')}`,
         })
       }
-      navigate(`/athletes/${currentAthlete.id}`)
+      router.push(`/athletes/${currentAthlete.id}`)
     } else {
       setExerciseIndex((prev) => prev + 1)
     }
@@ -186,7 +193,7 @@ function TrainingSessionPage() {
       ) : (
         <div className="TrainingSessionPage-empty">
           <p>Nenhum exercício configurado para {getWeekDayLabel(selectedDay)}.</p>
-          <Link to={`/athletes/${currentAthlete.id}/plan`}>Configurar plano semanal</Link>
+          <Link href={`/athletes/${currentAthlete.id}/plan`}>Configurar plano semanal</Link>
         </div>
       )}
 

@@ -1,8 +1,9 @@
+'use client'
+
 import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import type { Athlete, NewAthleteInput } from '../types/athlete'
 import { readFileAsDataUrl } from '../utils/file'
-import './AthleteForm.css'
 
 interface AthleteFormProps {
   initialValues?: Athlete

@@ -1,12 +1,14 @@
+'use client'
+
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import TrendLineChart from '../components/TrendLineChart'
 import type { TrendChartPoint, TrendChartSeries } from '../components/TrendLineChart'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import type { BodyMeasurementEntry, NewBodyMeasurementInput } from '../types/athlete'
-import './BodyMeasurementsPage.css'
 
 interface FieldConfig {
   key: keyof NewBodyMeasurementInput
@@ -85,7 +87,7 @@ function BodyMeasurementsPage() {
     return (
       <div className="Page">
         <p className="Page-empty">Atleta não encontrado.</p>
-        <Link to="/">Voltar para a lista</Link>
+        <Link href="/">Voltar para a lista</Link>
       </div>
     )
   }
@@ -94,7 +96,7 @@ function BodyMeasurementsPage() {
     return (
       <div className="Page">
         <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
-        <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
+        <Link href={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
   }

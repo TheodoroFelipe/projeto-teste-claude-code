@@ -1,12 +1,14 @@
+'use client'
+
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
-import './LoginPage.css'
 
 function LoginPage() {
   const { login } = useAuth()
-  const navigate = useNavigate()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -20,7 +22,7 @@ function LoginPage() {
     setIsSubmitting(false)
 
     if (result.ok) {
-      navigate('/', { replace: true })
+      router.replace('/')
     } else {
       setError(result.error)
     }
@@ -41,7 +43,7 @@ function LoginPage() {
 
         <div className="segmented AuthPage-segmented">
           <span className="segmented-item active">Entrar</span>
-          <Link className="segmented-item" to="/register">
+          <Link className="segmented-item" href="/register">
             Criar conta
           </Link>
         </div>
@@ -74,7 +76,7 @@ function LoginPage() {
         </form>
 
         <p className="AuthPage-switchText">
-          Ainda não tem conta? <Link to="/register">Criar conta</Link>
+          Ainda não tem conta? <Link href="/register">Criar conta</Link>
         </p>
       </div>
     </div>

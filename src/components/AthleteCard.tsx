@@ -1,4 +1,3 @@
-import './AthleteCard.css'
 import type { Athlete } from '../types/athlete'
 
 interface AthleteCardProps {

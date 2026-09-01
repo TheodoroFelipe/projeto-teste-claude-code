@@ -28,8 +28,8 @@
   --radius-sm: 12px;
   --radius-pill: 999px;
 
-  --font-heading: 'Sora', system-ui, sans-serif;
-  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-heading: var(--font-sora), system-ui, sans-serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
 
   font-family: var(--font-body);
   line-height: 1.5;

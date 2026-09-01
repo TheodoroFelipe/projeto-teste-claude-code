@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import { getLevelProgress, getTotalXp } from '../utils/xp'
-import './RankingPage.css'
 
 function initials(name: string): string {
   return name
@@ -51,7 +52,7 @@ function RankingPage() {
               const isMe = currentUser?.athleteId === athlete.id
               return (
                 <li key={athlete.id}>
-                  <Link className={`RankingPage-row${isMe ? ' me' : ''}`} to={`/athletes/${athlete.id}`}>
+                  <Link className={`RankingPage-row${isMe ? ' me' : ''}`} href={`/athletes/${athlete.id}`}>
                     <span className="RankingPage-rankNum">{position}</span>
                     {athlete.photoUrl ? (
                       <img className="avatar RankingPage-avatarSm RankingPage-avatarImg" src={athlete.photoUrl} alt={athlete.name} />
@@ -92,7 +93,7 @@ function PodiumColumn({ entry, place, size, crowned }: PodiumColumnProps) {
   const barHeight = place === 1 ? 88 : place === 2 ? 64 : 48
 
   return (
-    <Link className="RankingPage-podiumCol" to={`/athletes/${entry.athlete.id}`}>
+    <Link className="RankingPage-podiumCol" href={`/athletes/${entry.athlete.id}`}>
       {crowned && (
         <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--lime)" stroke="none" className="RankingPage-crown">
           <path d="M3 8l4 3 5-6 5 6 4-3-2 10H5L3 8z" />

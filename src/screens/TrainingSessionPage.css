@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), monospace;
   font-weight: 700;
   font-size: 15px;
   color: var(--lime);

@@ -1,8 +1,9 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import { calcPlannedExerciseXp } from '../utils/plannedExerciseXp'
 import { formatDuration, getUnitCount, summarizePlannedExercise } from '../utils/trainingPlan'
 import type { PlannedExercise } from '../types/trainingPlan'
-import './ExerciseLogger.css'
 
 const REST_DURATION_SECONDS = 150
 

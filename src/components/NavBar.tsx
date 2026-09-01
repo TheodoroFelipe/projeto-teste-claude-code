@@ -1,4 +1,7 @@
-import { Link, NavLink } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 
 interface NavItem {
@@ -48,6 +51,7 @@ function PerfilIcon() {
 
 function NavBar() {
   const { currentUser } = useAuth()
+  const pathname = usePathname()
 
   if (!currentUser) return null
 
@@ -61,17 +65,17 @@ function NavBar() {
   return (
     <nav className="NavBar" aria-label="Navegação principal">
       <div className="NavBar-inner">
-        <Link className="NavBar-brand" to="/">
+        <Link className="NavBar-brand" href="/">
           <span className="NavBar-brandMark">A</span>
           <span className="NavBar-brandName">APEX</span>
         </Link>
         <ul className="NavBar-list">
           {items.map((item) => (
             <li key={item.to}>
-              <NavLink to={item.to} className={({ isActive }) => `NavBar-item${isActive ? ' active' : ''}`}>
+              <Link href={item.to} className={`NavBar-item${pathname === item.to ? ' active' : ''}`}>
                 {item.icon}
                 {item.label}
-              </NavLink>
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from 'react'
 import type { ReactNode } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
@@ -11,6 +13,7 @@ export type AuthResult = { ok: true } | { ok: false; error: string }
 export interface AuthContextValue {
   currentUser: PublicUser | null
   isAuthenticated: boolean
+  isHydrated: boolean
   register: (input: NewUserInput) => Promise<AuthResult>
   login: (input: LoginInput) => Promise<AuthResult>
   logout: () => void
@@ -36,8 +39,12 @@ function toPublicUser(user: User): PublicUser {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [users, setUsers] = useLocalStorage<User[]>('projeto-teste:users', [])
-  const [currentUserId, setCurrentUserId] = useLocalStorage<string | null>('projeto-teste:currentUserId', null)
+  const [users, setUsers, usersHydrated] = useLocalStorage<User[]>('projeto-teste:users', [])
+  const [currentUserId, setCurrentUserId, currentUserIdHydrated] = useLocalStorage<string | null>(
+    'projeto-teste:currentUserId',
+    null,
+  )
+  const isHydrated = usersHydrated && currentUserIdHydrated
 
   const currentUserRecord = currentUserId ? users.find((user) => user.id === currentUserId) : undefined
   const currentUser = currentUserRecord ? toPublicUser(currentUserRecord) : null
@@ -108,7 +115,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, isAuthenticated, register, login, logout, updateName, isEmailTaken }}
+      value={{ currentUser, isAuthenticated, isHydrated, register, login, logout, updateName, isEmailTaken }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,4 +1,7 @@
-import { Navigate } from 'react-router-dom'
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { useAuth } from '../hooks/useAuth'
 
@@ -7,11 +10,14 @@ interface RequireAuthProps {
 }
 
 function RequireAuth({ children }: RequireAuthProps) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isHydrated } = useAuth()
+  const router = useRouter()
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
-  }
+  useEffect(() => {
+    if (isHydrated && !isAuthenticated) router.replace('/login')
+  }, [isHydrated, isAuthenticated, router])
+
+  if (!isHydrated || !isAuthenticated) return null
 
   return <>{children}</>
 }

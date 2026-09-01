@@ -1,9 +1,11 @@
-import { Link, useParams } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import AthleteCard from '../components/AthleteCard'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import { getLevelProgress, getTotalXp } from '../utils/xp'
-import './AthleteProfilePage.css'
 
 function AthleteProfilePage() {
   const { athleteId } = useParams<{ athleteId: string }>()
@@ -15,7 +17,7 @@ function AthleteProfilePage() {
     return (
       <div className="Page">
         <p className="Page-empty">Atleta não encontrado.</p>
-        <Link to="/">Voltar para a lista</Link>
+        <Link href="/">Voltar para a lista</Link>
       </div>
     )
   }
@@ -28,7 +30,7 @@ function AthleteProfilePage() {
 
   return (
     <div className="Page">
-      <Link className="Page-backLink" to="/">
+      <Link className="Page-backLink" href="/">
         &larr; Voltar para a lista
       </Link>
 
@@ -36,16 +38,16 @@ function AthleteProfilePage() {
 
       {canManage && (
         <div className="AthleteProfilePage-actions">
-          <Link className="btn-secondary" to={`/athletes/${athlete.id}/edit`}>
+          <Link className="btn-secondary" href={`/athletes/${athlete.id}/edit`}>
             Editar atleta
           </Link>
-          <Link className="btn-secondary" to={`/athletes/${athlete.id}/plan`}>
+          <Link className="btn-secondary" href={`/athletes/${athlete.id}/plan`}>
             Configurar plano semanal
           </Link>
-          <Link className="btn-secondary" to={`/athletes/${athlete.id}/session`}>
+          <Link className="btn-secondary" href={`/athletes/${athlete.id}/session`}>
             Iniciar sessão de treino
           </Link>
-          <Link className="btn-secondary" to={`/athletes/${athlete.id}/evolution`}>
+          <Link className="btn-secondary" href={`/athletes/${athlete.id}/evolution`}>
             Ver evolução física
           </Link>
         </div>

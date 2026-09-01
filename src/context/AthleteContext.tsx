@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from 'react'
 import type { ReactNode } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'

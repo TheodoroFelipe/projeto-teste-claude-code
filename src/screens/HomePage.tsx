@@ -1,13 +1,16 @@
-import { useMemo, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import AthleteCard from '../components/AthleteCard'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
-import './HomePage.css'
 
 function HomePage() {
   const { currentUser } = useAuth()
   const { athletes } = useAthletes()
+  const router = useRouter()
   const [search, setSearch] = useState('')
   const [sportFilter, setSportFilter] = useState('')
 
@@ -22,15 +25,21 @@ function HomePage() {
     return matchesSearch && matchesSport
   })
 
-  if (currentUser && currentUser.role !== 'coach') {
-    return <Navigate to={`/athletes/${currentUser.athleteId}`} replace />
-  }
+  const shouldRedirectToOwnProfile = Boolean(currentUser && currentUser.role !== 'coach')
+
+  useEffect(() => {
+    if (currentUser && currentUser.role !== 'coach') {
+      router.replace(`/athletes/${currentUser.athleteId}`)
+    }
+  }, [currentUser, router])
+
+  if (shouldRedirectToOwnProfile) return null
 
   return (
     <div className="Page Page-wide">
       <div className="HomePage-header">
         <h1 className="Page-title">Atletas</h1>
-        <Link className="btn-secondary" to="/athletes/new">
+        <Link className="btn-secondary" href="/athletes/new">
           + Cadastrar atleta
         </Link>
       </div>
@@ -59,7 +68,7 @@ function HomePage() {
 
       <div className="HomePage-list">
         {filteredAthletes.map((athlete) => (
-          <Link key={athlete.id} className="HomePage-cardLink" to={`/athletes/${athlete.id}`}>
+          <Link key={athlete.id} className="HomePage-cardLink" href={`/athletes/${athlete.id}`}>
             <AthleteCard athlete={athlete} />
           </Link>
         ))}

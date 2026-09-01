@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import PlannedExerciseFields from './PlannedExerciseFields'
@@ -5,7 +7,6 @@ import type { PlannedExerciseFieldsValue } from './PlannedExerciseFields'
 import { generateId } from '../utils/id'
 import { MODALITY_LABELS, MODALITY_OPTIONS, summarizePlannedExercise } from '../utils/trainingPlan'
 import type { Modality, PlannedExercise } from '../types/trainingPlan'
-import './DayPlanEditor.css'
 
 const EMPTY_FIELDS: PlannedExerciseFieldsValue = {
   sets: '3',

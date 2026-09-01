@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import { calcPlannedExerciseXp } from '../utils/plannedExerciseXp'
@@ -11,7 +13,6 @@ import {
   summarizePlannedExercise,
 } from '../utils/trainingPlan'
 import { getStreakDays } from '../utils/xp'
-import './TodayWorkoutPage.css'
 
 function dominantModalityLabel(modalities: string[]): string {
   const counts = new Map<string, number>()
@@ -63,7 +64,7 @@ function TodayWorkoutPage() {
       {exercises.length === 0 ? (
         <div className="card TodayWorkoutPage-empty">
           <p>Nenhum exercício configurado para {todayLabel}.</p>
-          <Link to={`/athletes/${athlete.id}/plan`}>Configurar plano semanal</Link>
+          <Link href={`/athletes/${athlete.id}/plan`}>Configurar plano semanal</Link>
         </div>
       ) : (
         <>
@@ -73,7 +74,7 @@ function TodayWorkoutPage() {
               <div className="TodayWorkoutPage-heroTitle">{todayLabel}</div>
               <div className="TodayWorkoutPage-heroMeta">{exercises.length} exercícios</div>
             </div>
-            <Link className="btn-primary" to={`/athletes/${athlete.id}/session`}>
+            <Link className="btn-primary" href={`/athletes/${athlete.id}/session`}>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none">
                 <path d="M8 5v14l11-7z" />
               </svg>

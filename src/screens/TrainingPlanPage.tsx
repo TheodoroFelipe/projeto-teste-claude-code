@@ -1,11 +1,13 @@
+'use client'
+
 import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import DayPlanEditor from '../components/DayPlanEditor'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import { WEEK_DAYS, getCurrentWeekDay, getDayPlan, getWeeklyPlanOrDefault } from '../utils/trainingPlan'
 import type { PlannedExercise, WeeklyPlan } from '../types/trainingPlan'
-import './TrainingPlanPage.css'
 
 const SHORT_LABELS = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM']
 
@@ -25,7 +27,7 @@ function currentWeekDates(): Date[] {
 function TrainingPlanPage() {
   const { athleteId } = useParams<{ athleteId: string }>()
   const { getAthleteById, updateWeeklyPlan } = useAthletes()
-  const navigate = useNavigate()
+  const router = useRouter()
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
   const canManage = useCanManageAthlete(athleteId)
   const [draftPlan, setDraftPlan] = useState<WeeklyPlan | null>(null)
@@ -36,7 +38,7 @@ function TrainingPlanPage() {
     return (
       <div className="Page">
         <p className="Page-empty">Atleta não encontrado.</p>
-        <Link to="/">Voltar para a lista</Link>
+        <Link href="/">Voltar para a lista</Link>
       </div>
     )
   }
@@ -45,7 +47,7 @@ function TrainingPlanPage() {
     return (
       <div className="Page">
         <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
-        <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
+        <Link href={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
   }
@@ -84,7 +86,7 @@ function TrainingPlanPage() {
 
   function handleSave() {
     updateWeeklyPlan(currentAthlete.id, weeklyPlan)
-    navigate(`/athletes/${currentAthlete.id}`)
+    router.push(`/athletes/${currentAthlete.id}`)
   }
 
   const selectedDayPlan = getDayPlan(weeklyPlan, WEEK_DAYS[selectedDayIndex].day)
@@ -92,7 +94,7 @@ function TrainingPlanPage() {
   return (
     <div className="Page">
       <div className="TrainingPlanPage-topbar">
-        <Link className="Page-backLink" to={`/athletes/${athlete.id}`}>
+        <Link className="Page-backLink" href={`/athletes/${athlete.id}`}>
           &larr; Voltar
         </Link>
         <span className="TrainingPlanPage-title">Plano semanal</span>

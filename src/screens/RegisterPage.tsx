@@ -1,20 +1,21 @@
+'use client'
+
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 import { useAthletes } from '../hooks/useAthletes'
 import { generateId } from '../utils/id'
 import { SPORT_OPTIONS } from '../utils/sports'
 import { isValidEmail, MIN_PASSWORD_LENGTH } from '../utils/validation'
-import './LoginPage.css'
-import './RegisterPage.css'
 
 const OTHER_SPORT_OPTION = 'Outro'
 
 function RegisterPage() {
   const { register, isEmailTaken } = useAuth()
   const { addAthlete } = useAthletes()
-  const navigate = useNavigate()
+  const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -55,7 +56,7 @@ function RegisterPage() {
     setIsSubmitting(false)
 
     if (result.ok) {
-      navigate('/', { replace: true })
+      router.replace('/')
     } else {
       setError(result.error)
     }
@@ -73,7 +74,7 @@ function RegisterPage() {
         <p className="AuthPage-tagline">TREINO · EVOLUÇÃO · PERFORMANCE</p>
 
         <div className="segmented AuthPage-segmented" style={{ marginTop: 24 }}>
-          <Link className="segmented-item" to="/login">
+          <Link className="segmented-item" href="/login">
             Entrar
           </Link>
           <span className="segmented-item active">Criar conta</span>
@@ -152,7 +153,7 @@ function RegisterPage() {
         </form>
 
         <p className="AuthPage-switchText">
-          Já tem conta? <Link to="/login">Entrar</Link>
+          Já tem conta? <Link href="/login">Entrar</Link>
         </p>
       </div>
     </div>

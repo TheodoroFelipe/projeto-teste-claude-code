@@ -1,4 +1,7 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import AthleteForm from '../components/AthleteForm'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
@@ -7,7 +10,7 @@ import type { Athlete, NewAthleteInput } from '../types/athlete'
 function EditAthletePage() {
   const { athleteId } = useParams<{ athleteId: string }>()
   const { getAthleteById, updateAthlete } = useAthletes()
-  const navigate = useNavigate()
+  const router = useRouter()
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
   const canManage = useCanManageAthlete(athleteId)
 
@@ -15,7 +18,7 @@ function EditAthletePage() {
     return (
       <div className="Page">
         <p className="Page-empty">Atleta não encontrado.</p>
-        <Link to="/">Voltar para a lista</Link>
+        <Link href="/">Voltar para a lista</Link>
       </div>
     )
   }
@@ -24,7 +27,7 @@ function EditAthletePage() {
     return (
       <div className="Page">
         <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
-        <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
+        <Link href={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
   }
@@ -33,12 +36,12 @@ function EditAthletePage() {
 
   function handleSubmit(input: NewAthleteInput) {
     updateAthlete(currentAthlete.id, input)
-    navigate(`/athletes/${currentAthlete.id}`, { replace: true })
+    router.replace(`/athletes/${currentAthlete.id}`)
   }
 
   return (
     <div className="Page">
-      <Link className="Page-backLink" to={`/athletes/${athlete.id}`}>
+      <Link className="Page-backLink" href={`/athletes/${athlete.id}`}>
         &larr; Voltar para o perfil
       </Link>
       <h1 className="Page-title">Editar atleta</h1>

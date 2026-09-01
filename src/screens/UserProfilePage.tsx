@@ -1,11 +1,12 @@
+'use client'
+
 import { useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import { readFileAsDataUrl } from '../utils/file'
 import { getLevelProgress, getStreakDays, getTotalXp } from '../utils/xp'
-import './UserProfilePage.css'
 
 const MAX_PHOTO_BYTES = 4 * 1024 * 1024
 
@@ -227,7 +228,7 @@ function UserProfilePage() {
       </div>
 
       {athlete && (
-        <Link className="btn-secondary" to={`/athletes/${athlete.id}`} style={{ textAlign: 'center' }}>
+        <Link className="btn-secondary" href={`/athletes/${athlete.id}`} style={{ textAlign: 'center' }}>
           Meu perfil de atleta
         </Link>
       )}
