@@ -3,7 +3,6 @@ import AthleteForm from '../components/AthleteForm'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import type { NewAthleteInput } from '../types/athlete'
-import './AthleteFormPage.css'
 
 function NewAthletePage() {
   const { currentUser } = useAuth()
@@ -20,11 +19,11 @@ function NewAthletePage() {
   }
 
   return (
-    <div className="AthleteFormPage">
-      <Link className="AthleteFormPage-backLink" to="/">
+    <div className="Page">
+      <Link className="Page-backLink" to="/">
         &larr; Voltar para a lista
       </Link>
-      <h2>Cadastrar atleta</h2>
+      <h1 className="Page-title">Cadastrar atleta</h1>
       <AthleteForm submitLabel="Cadastrar" onSubmit={handleSubmit} />
     </div>
   )

@@ -68,6 +68,7 @@ function DayPlanEditor({ dayLabel, exercises, onAdd, onRemove }: DayPlanEditorPr
   const [modality, setModality] = useState<Modality>('musculacao')
   const [name, setName] = useState('')
   const [fields, setFields] = useState<PlannedExerciseFieldsValue>(EMPTY_FIELDS)
+  const [isAdding, setIsAdding] = useState(false)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -75,58 +76,99 @@ function DayPlanEditor({ dayLabel, exercises, onAdd, onRemove }: DayPlanEditorPr
     onAdd(buildExercise(name.trim(), modality, fields))
     setName('')
     setFields(EMPTY_FIELDS)
+    setIsAdding(false)
   }
 
   return (
     <div className="DayPlanEditor">
-      <h3 className="DayPlanEditor-day">{dayLabel}</h3>
+      <div className="section-title DayPlanEditor-day">{dayLabel}</div>
 
-      {exercises.length === 0 ? (
-        <p className="DayPlanEditor-empty">Nenhum exercício configurado.</p>
-      ) : (
-        <ul className="DayPlanEditor-list">
-          {exercises.map((exercise) => (
-            <li key={exercise.id} className="DayPlanEditor-item">
-              <span className="DayPlanEditor-itemName">{exercise.name}</span>
-              <span className="DayPlanEditor-itemModality">{MODALITY_LABELS[exercise.modality]}</span>
-              <span className="DayPlanEditor-itemSummary">{summarizePlannedExercise(exercise)}</span>
-              <button type="button" onClick={() => onRemove(exercise.id)}>
-                Remover
+      <div className="DayPlanEditor-list">
+        {exercises.length === 0 && !isAdding && <p className="DayPlanEditor-empty">Nenhum exercício configurado.</p>}
+
+        {exercises.map((exercise) => (
+          <div key={exercise.id} className="DayPlanEditor-item">
+            <div className="DayPlanEditor-itemIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 9v6" />
+                <path d="M2 10v4" />
+                <path d="M20 9v6" />
+                <path d="M22 10v4" />
+                <path d="M6 12h12" />
+                <path d="M6 8.5v7" />
+                <path d="M18 8.5v7" />
+              </svg>
+            </div>
+            <div className="DayPlanEditor-itemInfo">
+              <div className="DayPlanEditor-itemName">{exercise.name}</div>
+              <div className="DayPlanEditor-itemDetail">
+                {MODALITY_LABELS[exercise.modality]} · {summarizePlannedExercise(exercise)}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="DayPlanEditor-removeButton"
+              onClick={() => onRemove(exercise.id)}
+              aria-label={`Remover ${exercise.name}`}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+
+        {isAdding ? (
+          <form className="DayPlanEditor-form" onSubmit={handleSubmit}>
+            <div className="field-group">
+              <label htmlFor="new-exercise-name">Nome do exercício</label>
+              <input
+                id="new-exercise-name"
+                type="text"
+                required
+                autoFocus
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+            </div>
+            <div className="field-group">
+              <label htmlFor="new-exercise-modality">Modalidade</label>
+              <select
+                id="new-exercise-modality"
+                value={modality}
+                onChange={(event) => {
+                  const nextModality = event.target.value as Modality
+                  setModality(nextModality)
+                  if (nextModality === 'natacao') {
+                    setFields((prev) => ({ ...prev, distance: '1000' }))
+                  } else if (nextModality === 'corrida' || nextModality === 'ciclismo') {
+                    setFields((prev) => ({ ...prev, distance: '5' }))
+                  }
+                }}
+              >
+                {MODALITY_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {MODALITY_LABELS[option]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="DayPlanEditor-fieldsRow">
+              <PlannedExerciseFields modality={modality} value={fields} onChange={setFields} />
+            </div>
+            <div className="DayPlanEditor-formActions">
+              <button type="submit" className="btn-secondary">
+                Adicionar
               </button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <form className="DayPlanEditor-form" onSubmit={handleSubmit}>
-        <label>
-          Nome do exercício
-          <input type="text" required value={name} onChange={(event) => setName(event.target.value)} />
-        </label>
-        <label>
-          Modalidade
-          <select
-            value={modality}
-            onChange={(event) => {
-              const nextModality = event.target.value as Modality
-              setModality(nextModality)
-              if (nextModality === 'natacao') {
-                setFields((prev) => ({ ...prev, distance: '1000' }))
-              } else if (nextModality === 'corrida' || nextModality === 'ciclismo') {
-                setFields((prev) => ({ ...prev, distance: '5' }))
-              }
-            }}
-          >
-            {MODALITY_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {MODALITY_LABELS[option]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <PlannedExerciseFields modality={modality} value={fields} onChange={setFields} />
-        <button type="submit">Adicionar exercício</button>
-      </form>
+              <button type="button" className="btn-ghost" onClick={() => setIsAdding(false)}>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        ) : (
+          <button type="button" className="DayPlanEditor-addButton" onClick={() => setIsAdding(true)}>
+            + Adicionar exercício
+          </button>
+        )}
+      </div>
     </div>
   )
 }

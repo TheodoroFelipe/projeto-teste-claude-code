@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { calcPlannedExerciseXp } from '../utils/plannedExerciseXp'
-import { MODALITY_LABELS, formatDuration, summarizePlannedExercise } from '../utils/trainingPlan'
+import { formatDuration, summarizePlannedExercise } from '../utils/trainingPlan'
 import type { PlannedExercise } from '../types/trainingPlan'
 import './ExerciseLogger.css'
 
@@ -14,6 +14,14 @@ interface ExerciseLoggerProps {
 
 function unitCount(exercise: PlannedExercise): number {
   return exercise.modality === 'musculacao' ? exercise.targetSets : 1
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 12l5 5L20 6" />
+    </svg>
+  )
 }
 
 function ExerciseLogger({ exercise, onXpChange, onUnitCompleted }: ExerciseLoggerProps) {
@@ -50,29 +58,33 @@ function ExerciseLogger({ exercise, onXpChange, onUnitCompleted }: ExerciseLogge
 
   return (
     <div className="ExerciseLogger">
-      <div className="ExerciseLogger-header">
-        <span className="ExerciseLogger-name">{exercise.name.toUpperCase()}</span>
-        <span className="ExerciseLogger-modality">{MODALITY_LABELS[exercise.modality]}</span>
+      <div className="ExerciseLogger-hero">
+        <div className="ExerciseLogger-name">{exercise.name}</div>
+        <div className="ExerciseLogger-target">Meta: {summarizePlannedExercise(exercise)}</div>
       </div>
 
       {isStrength && exercise.modality === 'musculacao' ? (
         <div className="ExerciseLogger-sets">
-          {doneList.map((done, index) => (
-            <button
-              key={index}
-              type="button"
-              className={`ExerciseLogger-setRow${done ? ' is-done' : ''}`}
-              onClick={() => toggle(index)}
-            >
-              <span className="ExerciseLogger-setLabel">S{index + 1}</span>
-              <span className="ExerciseLogger-setValues">
-                <span className="ExerciseLogger-setKg">{exercise.targetLoadKg}</span>
-                <span className="ExerciseLogger-setReps">kg × {exercise.targetReps}</span>
-              </span>
-              <span className="ExerciseLogger-setXp">{done ? `+${perUnitXp} XP` : '—'}</span>
-              <span className="ExerciseLogger-setCheck">✓</span>
-            </button>
-          ))}
+          {doneList.map((done, index) => {
+            const status = done ? 'done' : index === nextPendingIndex ? 'active' : 'pending'
+            return (
+              <button
+                key={index}
+                type="button"
+                className={`ExerciseLogger-setRow ExerciseLogger-setRow-${status}`}
+                onClick={() => toggle(index)}
+              >
+                <span className={`ExerciseLogger-setStatus ExerciseLogger-setStatus-${status}`}>
+                  {done ? <CheckIcon /> : index + 1}
+                </span>
+                <span className="ExerciseLogger-setLabel">Série {index + 1}</span>
+                <span className="ExerciseLogger-setValues">
+                  {exercise.targetReps} reps · {exercise.targetLoadKg} kg
+                </span>
+                <span className="ExerciseLogger-setXp">{done ? `+${perUnitXp} XP` : ''}</span>
+              </button>
+            )
+          })}
           <button type="button" className="ExerciseLogger-addSet" onClick={handleAddSet}>
             ＋ Adicionar série extra
           </button>
@@ -83,10 +95,10 @@ function ExerciseLogger({ exercise, onXpChange, onUnitCompleted }: ExerciseLogge
           className={`ExerciseLogger-completionCard${doneList[0] ? ' is-done' : ''}`}
           onClick={() => toggle(0)}
         >
-          <span className="ExerciseLogger-completionTarget">{summarizePlannedExercise(exercise)}</span>
-          <span className="ExerciseLogger-completionXp">
-            {doneList[0] ? `+${perUnitXp} XP` : 'Marcar como concluído'}
+          <span className={`ExerciseLogger-setStatus ExerciseLogger-setStatus-${doneList[0] ? 'done' : 'active'}`}>
+            {doneList[0] ? <CheckIcon /> : ''}
           </span>
+          <span className="ExerciseLogger-completionXp">{doneList[0] ? `+${perUnitXp} XP` : 'Marcar como concluído'}</span>
         </button>
       )}
 

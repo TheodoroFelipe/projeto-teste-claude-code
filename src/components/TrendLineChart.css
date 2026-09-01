@@ -1,6 +1,5 @@
 .TrendLineChart {
   width: 100%;
-  max-width: 640px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -11,7 +10,7 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   font-size: 0.8rem;
-  color: #52514e;
+  color: var(--text-secondary);
 }
 
 .TrendLineChart-legendItem {
@@ -34,16 +33,16 @@
 }
 
 .TrendLineChart-empty {
-  color: #898781;
+  color: var(--text-tertiary);
   font-size: 0.85rem;
 }
 
 .TrendLineChart-tooltip {
   align-self: flex-start;
-  border: 1px solid #e1e0d9;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
-  background: #fcfcfb;
+  background: var(--card-alt);
   font-size: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -52,8 +51,8 @@
 }
 
 .TrendLineChart-tooltipDate {
-  font-weight: 600;
-  color: #0b0b0b;
+  font-weight: 700;
+  color: var(--text);
 }
 
 .TrendLineChart-tooltipRow {
@@ -69,12 +68,12 @@
 }
 
 .TrendLineChart-tooltipLabel {
-  color: #52514e;
+  color: var(--text-secondary);
   flex: 1;
 }
 
 .TrendLineChart-tooltipValue {
   font-weight: 700;
-  color: #0b0b0b;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }

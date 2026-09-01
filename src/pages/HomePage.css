@@ -1,25 +1,25 @@
-.HomePage {
+.HomePage-header {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
   align-items: center;
-}
-
-.HomePage-actions {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .HomePage-filters {
   display: flex;
   gap: 0.5rem;
   width: 100%;
-  max-width: 480px;
+  flex-wrap: wrap;
 }
 
 .HomePage-searchInput {
   flex: 1;
+  min-width: 160px;
+}
+
+.HomePage-sportSelect {
+  flex-shrink: 0;
 }
 
 .HomePage-list {
@@ -27,7 +27,6 @@
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
-  align-items: center;
 }
 
 .HomePage-cardLink {
@@ -35,6 +34,9 @@
   color: inherit;
 }
 
-.HomePage-empty {
-  color: #666;
+@media (min-width: 1024px) {
+  .HomePage-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

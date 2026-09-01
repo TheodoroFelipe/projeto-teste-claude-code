@@ -3,9 +3,10 @@
   gap: 1rem;
   align-items: center;
   padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  max-width: 320px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  width: 100%;
 }
 
 .AthleteCard-photo {
@@ -13,10 +14,13 @@
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
 .AthleteCard-info {
   text-align: left;
+  min-width: 0;
 }
 
 .AthleteCard-name {
@@ -26,7 +30,7 @@
 
 .AthleteCard-sport {
   margin: 0.25rem 0;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .AthleteCard-details {
@@ -34,4 +38,5 @@
   padding: 0;
   list-style: none;
   font-size: 0.9rem;
+  color: var(--text-secondary);
 }

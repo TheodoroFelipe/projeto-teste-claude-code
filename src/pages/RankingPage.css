@@ -1,58 +1,170 @@
-.RankingPage {
+.RankingPage-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0 4px;
+}
+
+.RankingPage-podiumCol {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 8px;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
 }
 
-.RankingPage-backLink {
-  align-self: flex-start;
+.RankingPage-podiumAvatar {
+  font-size: 14px;
+}
+
+.RankingPage-podiumAvatar-md {
+  width: 52px;
+  height: 52px;
+}
+
+.RankingPage-podiumAvatar-lg {
+  width: 64px;
+  height: 64px;
+  font-size: 17px;
+}
+
+.RankingPage-podiumAvatar.crowned {
+  border: 3px solid var(--lime);
+  background: var(--lime-soft);
+  color: var(--lime);
+}
+
+.RankingPage-podiumName {
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.RankingPage-podiumXp {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.RankingPage-podiumBar {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  background: var(--card-alt);
+  color: var(--text-secondary);
+}
+
+.RankingPage-podiumBar.crowned {
+  background: var(--lime-soft);
+  border: 1px solid var(--lime);
+  color: var(--lime);
+}
+
+.RankingPage-crown {
+  margin-bottom: -4px;
 }
 
 .RankingPage-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 480px;
+  gap: 8px;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.RankingPage-item {
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-}
-
-.RankingPage-itemLink {
+.RankingPage-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 12px;
   text-decoration: none;
   color: inherit;
 }
 
-.RankingPage-position {
-  font-weight: bold;
-  min-width: 2rem;
+.RankingPage-row.me {
+  border-color: var(--lime);
+  background: var(--lime-soft);
 }
 
-.RankingPage-name {
+.RankingPage-rankNum {
+  width: 18px;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.RankingPage-avatarSm {
+  width: 38px;
+  height: 38px;
+  font-size: 12px;
+}
+
+.RankingPage-rowInfo {
   flex: 1;
-  text-align: left;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.RankingPage-sport {
-  color: #666;
-  font-size: 0.9rem;
+.RankingPage-rowName {
+  font-size: 13.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.RankingPage-level {
-  font-size: 0.9rem;
+.RankingPage-rowSport {
+  font-size: 11.5px;
+  color: var(--text-secondary);
 }
 
-.RankingPage-xp {
-  font-weight: bold;
+.RankingPage-rowXp {
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.RankingPage-youTag {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--lime);
+  background: var(--lime-soft);
+  border-radius: 999px;
+  padding: 1px 6px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .RankingPage-podiumAvatar-md {
+    width: 64px;
+    height: 64px;
+    font-size: 16px;
+  }
+
+  .RankingPage-podiumAvatar-lg {
+    width: 80px;
+    height: 80px;
+    font-size: 20px;
+  }
 }

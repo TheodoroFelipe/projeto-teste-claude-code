@@ -1,18 +1,114 @@
-.LoginPage {
+.AuthPage {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
   display: flex;
   justify-content: center;
 }
 
-.LoginPage-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 320px;
-  text-align: left;
+.AuthPage-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.32;
+  z-index: 0;
 }
 
-.LoginPage-error {
-  color: #c0392b;
-  margin: 0;
+.AuthPage-glowLime {
+  width: 280px;
+  height: 280px;
+  background: var(--lime);
+  top: -90px;
+  right: -90px;
+}
+
+.AuthPage-glowCoral {
+  width: 260px;
+  height: 260px;
+  background: var(--coral);
+  bottom: -80px;
+  left: -100px;
+}
+
+.AuthPage-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  padding: 56px 24px 40px;
+}
+
+.AuthPage-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.AuthPage-brandMark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--lime);
+  color: var(--lime-ink);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.AuthPage-brandName {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+
+.AuthPage-tagline {
+  margin: 14px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.AuthPage-spacer {
+  flex: 0 0 40px;
+}
+
+.AuthPage-segmented {
+  margin-bottom: 24px;
+}
+
+.AuthPage-segmented .segmented-item {
+  text-decoration: none;
+  padding: 11px;
+  font-size: 13px;
+}
+
+.AuthPage-segmented .segmented-item.active {
+  background: var(--lime);
+  color: var(--lime-ink);
+}
+
+.AuthPage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.AuthPage-switchText {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 22px 0 0;
+}
+
+@media (min-width: 768px) {
+  .AuthPage-wrap {
+    padding-top: 96px;
+  }
 }

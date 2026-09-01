@@ -1,56 +1,101 @@
-.TodayWorkoutPage {
+.TodayWorkoutPage-topbar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  text-align: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.TodayWorkoutPage-date {
+  display: block;
+  margin-top: 2px;
+  text-transform: capitalize;
 }
 
 .TodayWorkoutPage-empty {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
+}
+
+.TodayWorkoutPage-hero {
+  border-color: var(--lime-soft-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.TodayWorkoutPage-modalityTag {
+  align-self: flex-start;
+  color: var(--text);
+}
+
+.TodayWorkoutPage-heroTitle {
+  font-size: 19px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.TodayWorkoutPage-heroMeta {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.TodayWorkoutPage-xpRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--coral);
 }
 
 .TodayWorkoutPage-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 100%;
-  max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  text-align: left;
+  gap: 10px;
 }
 
 .TodayWorkoutPage-item {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 13px 14px;
+}
+
+.TodayWorkoutPage-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  flex-shrink: 0;
+}
+
+.TodayWorkoutPage-itemInfo {
+  flex: 1;
+  min-width: 0;
 }
 
 .TodayWorkoutPage-itemName {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 14px;
 }
 
-.TodayWorkoutPage-itemModality {
-  font-size: 0.8rem;
-  color: #555;
-  background: #f0f0f0;
-  border-radius: 999px;
-  padding: 0.15rem 0.5rem;
+.TodayWorkoutPage-itemDetail {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
 }
 
-.TodayWorkoutPage-itemSummary {
-  font-size: 0.85rem;
-  color: #555;
-}
-
-.TodayWorkoutPage-startLink {
-  font-weight: 600;
+@media (min-width: 768px) {
+  .TodayWorkoutPage-hero {
+    padding: 24px;
+  }
 }

@@ -22,3 +22,28 @@ export function getLevelProgress(totalXp: number): LevelProgress {
     xpToNextLevel: XP_PER_LEVEL - currentLevelXp,
   }
 }
+
+function toDayKey(dateIso: string): string {
+  return new Date(dateIso).toDateString()
+}
+
+/** Conta os dias consecutivos (a partir de hoje ou ontem) com pelo menos um registro de XP. */
+export function getStreakDays(evolutionHistory: EvolutionEntry[]): number {
+  if (evolutionHistory.length === 0) return 0
+
+  const daysWithEntries = new Set(evolutionHistory.map((entry) => toDayKey(entry.date)))
+  const cursor = new Date()
+
+  if (!daysWithEntries.has(toDayKey(cursor.toISOString()))) {
+    cursor.setDate(cursor.getDate() - 1)
+    if (!daysWithEntries.has(toDayKey(cursor.toISOString()))) return 0
+  }
+
+  let streak = 0
+  while (daysWithEntries.has(toDayKey(cursor.toISOString()))) {
+    streak += 1
+    cursor.setDate(cursor.getDate() - 1)
+  }
+
+  return streak
+}

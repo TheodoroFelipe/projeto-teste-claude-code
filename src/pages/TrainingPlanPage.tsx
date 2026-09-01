@@ -3,9 +3,24 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import DayPlanEditor from '../components/DayPlanEditor'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
-import { WEEK_DAYS, getDayPlan, getWeeklyPlanOrDefault } from '../utils/trainingPlan'
+import { WEEK_DAYS, getCurrentWeekDay, getDayPlan, getWeeklyPlanOrDefault } from '../utils/trainingPlan'
 import type { PlannedExercise, WeeklyPlan } from '../types/trainingPlan'
 import './TrainingPlanPage.css'
+
+const SHORT_LABELS = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM']
+
+function currentWeekDates(): Date[] {
+  const today = new Date()
+  const jsDay = today.getDay() // 0 = Sunday
+  const mondayOffset = jsDay === 0 ? -6 : 1 - jsDay
+  const monday = new Date(today)
+  monday.setDate(today.getDate() + mondayOffset)
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(monday)
+    date.setDate(monday.getDate() + index)
+    return date
+  })
+}
 
 function TrainingPlanPage() {
   const { athleteId } = useParams<{ athleteId: string }>()
@@ -14,11 +29,13 @@ function TrainingPlanPage() {
   const athlete = athleteId ? getAthleteById(athleteId) : undefined
   const canManage = useCanManageAthlete(athleteId)
   const [draftPlan, setDraftPlan] = useState<WeeklyPlan | null>(null)
+  const currentDayIndex = WEEK_DAYS.findIndex(({ day }) => day === getCurrentWeekDay())
+  const [selectedDayIndex, setSelectedDayIndex] = useState(Math.max(currentDayIndex, 0))
 
   if (!athlete) {
     return (
-      <div className="TrainingPlanPage">
-        <p>Atleta não encontrado.</p>
+      <div className="Page">
+        <p className="Page-empty">Atleta não encontrado.</p>
         <Link to="/">Voltar para a lista</Link>
       </div>
     )
@@ -26,8 +43,8 @@ function TrainingPlanPage() {
 
   if (!canManage) {
     return (
-      <div className="TrainingPlanPage">
-        <p>Você não tem permissão para gerenciar este atleta.</p>
+      <div className="Page">
+        <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
         <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
@@ -35,6 +52,7 @@ function TrainingPlanPage() {
 
   const currentAthlete = athlete
   const weeklyPlan = draftPlan ?? getWeeklyPlanOrDefault(currentAthlete)
+  const dates = currentWeekDates()
 
   function handleAdd(dayIndex: number, exercise: PlannedExercise) {
     setDraftPlan(
@@ -59,30 +77,51 @@ function TrainingPlanPage() {
     navigate(`/athletes/${currentAthlete.id}`)
   }
 
-  return (
-    <div className="TrainingPlanPage">
-      <Link className="TrainingPlanPage-backLink" to={`/athletes/${athlete.id}`}>
-        &larr; Voltar para o perfil
-      </Link>
-      <h2>Plano semanal — {athlete.name}</h2>
+  const selectedDayPlan = getDayPlan(weeklyPlan, WEEK_DAYS[selectedDayIndex].day)
 
-      <div className="TrainingPlanPage-days">
-        {WEEK_DAYS.map(({ day, label }, index) => {
-          const dayPlan = getDayPlan(weeklyPlan, day)
+  return (
+    <div className="Page">
+      <div className="TrainingPlanPage-topbar">
+        <Link className="Page-backLink" to={`/athletes/${athlete.id}`}>
+          &larr; Voltar
+        </Link>
+        <span className="TrainingPlanPage-title">Plano semanal</span>
+      </div>
+      <div className="TrainingPlanPage-subhead">
+        <span className="avatar TrainingPlanPage-avatarXs">{athlete.name.slice(0, 2).toUpperCase()}</span>
+        <span className="TrainingPlanPage-subheadText">
+          {athlete.name} · {athlete.sport}
+        </span>
+      </div>
+
+      <div className="TrainingPlanPage-dayRow">
+        {WEEK_DAYS.map(({ day }, index) => {
+          const hasExercises = getDayPlan(weeklyPlan, day).exercises.length > 0
           return (
-            <DayPlanEditor
+            <button
               key={day}
-              dayLabel={label}
-              exercises={dayPlan.exercises}
-              onAdd={(exercise) => handleAdd(index, exercise)}
-              onRemove={(exerciseId) => handleRemove(index, exerciseId)}
-            />
+              type="button"
+              className={`TrainingPlanPage-dayPill${index === selectedDayIndex ? ' active' : ''}`}
+              onClick={() => setSelectedDayIndex(index)}
+            >
+              <span>{SHORT_LABELS[index]}</span>
+              <span className="num">{dates[index].getDate()}</span>
+              <span className={`TrainingPlanPage-dayDot${hasExercises ? '' : ' empty'}`} />
+            </button>
           )
         })}
       </div>
 
-      <button type="button" className="TrainingPlanPage-saveButton" onClick={handleSave}>
-        Salvar plano
+      <DayPlanEditor
+        key={WEEK_DAYS[selectedDayIndex].day}
+        dayLabel={WEEK_DAYS[selectedDayIndex].label}
+        exercises={selectedDayPlan.exercises}
+        onAdd={(exercise) => handleAdd(selectedDayIndex, exercise)}
+        onRemove={(exerciseId) => handleRemove(selectedDayIndex, exerciseId)}
+      />
+
+      <button type="button" className="btn-primary" onClick={handleSave}>
+        SALVAR PLANO
       </button>
     </div>
   )

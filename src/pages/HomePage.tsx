@@ -27,9 +27,10 @@ function HomePage() {
   }
 
   return (
-    <div className="HomePage">
-      <div className="HomePage-actions">
-        <Link className="HomePage-newAthleteLink" to="/athletes/new">
+    <div className="Page Page-wide">
+      <div className="HomePage-header">
+        <h1 className="Page-title">Atletas</h1>
+        <Link className="btn-secondary" to="/athletes/new">
           + Cadastrar atleta
         </Link>
       </div>
@@ -62,7 +63,7 @@ function HomePage() {
             <AthleteCard athlete={athlete} />
           </Link>
         ))}
-        {filteredAthletes.length === 0 && <p className="HomePage-empty">Nenhum atleta encontrado.</p>}
+        {filteredAthletes.length === 0 && <p className="Page-empty">Nenhum atleta encontrado.</p>}
       </div>
     </div>
   )

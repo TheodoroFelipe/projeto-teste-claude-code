@@ -3,7 +3,6 @@ import AthleteForm from '../components/AthleteForm'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import type { Athlete, NewAthleteInput } from '../types/athlete'
-import './AthleteFormPage.css'
 
 function EditAthletePage() {
   const { athleteId } = useParams<{ athleteId: string }>()
@@ -14,8 +13,8 @@ function EditAthletePage() {
 
   if (!athlete) {
     return (
-      <div className="AthleteFormPage">
-        <p>Atleta não encontrado.</p>
+      <div className="Page">
+        <p className="Page-empty">Atleta não encontrado.</p>
         <Link to="/">Voltar para a lista</Link>
       </div>
     )
@@ -23,8 +22,8 @@ function EditAthletePage() {
 
   if (!canManage) {
     return (
-      <div className="AthleteFormPage">
-        <p>Você não tem permissão para gerenciar este atleta.</p>
+      <div className="Page">
+        <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
         <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
@@ -38,11 +37,11 @@ function EditAthletePage() {
   }
 
   return (
-    <div className="AthleteFormPage">
-      <Link className="AthleteFormPage-backLink" to={`/athletes/${athlete.id}`}>
+    <div className="Page">
+      <Link className="Page-backLink" to={`/athletes/${athlete.id}`}>
         &larr; Voltar para o perfil
       </Link>
-      <h2>Editar atleta</h2>
+      <h1 className="Page-title">Editar atleta</h1>
       <AthleteForm initialValues={athlete} submitLabel="Salvar alterações" onSubmit={handleSubmit} />
     </div>
   )

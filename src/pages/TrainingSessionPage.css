@@ -1,80 +1,78 @@
-.TrainingSessionPage {
-  --ts-bg: #f5f3ef;
-  --ts-panel: #fff;
-  --ts-ink: #15130f;
-  --ts-ink2: rgba(21, 19, 15, 0.56);
-  --ts-line: rgba(21, 19, 15, 0.13);
-  --ts-ember: oklch(0.58 0.19 28);
-  --ts-ember-soft: oklch(0.58 0.19 28 / 0.12);
-  --ts-indigo: oklch(0.52 0.16 275);
-  --ts-chip: rgba(21, 19, 15, 0.06);
-
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem 1rem 3rem;
-  background: var(--ts-bg);
-  font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
-}
-
-.TrainingSessionPage-card {
-  width: 100%;
-  max-width: 440px;
-  background: var(--ts-bg);
-  border-radius: 24px;
-  border: 1px solid var(--ts-line);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.TrainingSessionPage-topBar {
+.TrainingSessionPage-topbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--ts-line);
 }
 
-.TrainingSessionPage-closeButton {
-  font: 700 18px/1 'Zen Kaku Gothic New', sans-serif;
-  color: var(--ts-ink2);
+.TrainingSessionPage-exitLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-}
-
-.TrainingSessionPage-topBarInfo {
-  flex: 1;
+  font-family: inherit;
+  padding: 0;
 }
 
 .TrainingSessionPage-daySelect {
-  font: 700 15px/1.1 'Zen Kaku Gothic New', sans-serif;
-  color: var(--ts-ink);
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px;
 }
 
-.TrainingSessionPage-meta {
-  font: 400 11.5px/1 'Zen Kaku Gothic New', sans-serif;
-  color: var(--ts-ink2);
-  margin-top: 5px;
+.TrainingSessionPage-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--lime);
+  flex-shrink: 0;
+}
+
+.TrainingSessionPage-progressLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.TrainingSessionPage-progressBar {
+  display: flex;
+  gap: 6px;
+}
+
+.TrainingSessionPage-progressSeg {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--card-alt);
+}
+
+.TrainingSessionPage-progressSeg.done {
+  background: var(--lime);
 }
 
 .TrainingSessionPage-xpBadgeWrap {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .TrainingSessionPage-xpBadge {
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 999px;
-  background: var(--ts-ember);
-  color: #fff;
-  font: 700 12px/1 'JetBrains Mono', monospace;
+  background: var(--lime-soft);
+  color: var(--lime);
+  font-weight: 800;
+  font-size: 12px;
 }
 
 .TrainingSessionPage-burst {
@@ -82,7 +80,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 2px solid var(--ts-ember);
+  border: 2px solid var(--lime);
   animation: TrainingSessionPage-burst 0.6s ease-out forwards;
   pointer-events: none;
 }
@@ -98,35 +96,17 @@
   }
 }
 
-.TrainingSessionPage-body {
-  padding: 20px 20px 4px;
-}
-
 .TrainingSessionPage-empty {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 20px 0;
-  font: 400 14px/1.5 'Zen Kaku Gothic New', sans-serif;
-  color: var(--ts-ink2);
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
 .TrainingSessionPage-footer {
-  padding: 16px 20px 24px;
-  border-top: 1px solid var(--ts-line);
-  background: var(--ts-panel);
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-top: 8px;
-}
-
-.TrainingSessionPage-nextButton {
-  flex: 1;
-  height: 48px;
-  border-radius: 11px;
-  background: var(--ts-ink);
-  color: var(--ts-bg);
-  border: none;
-  font: 700 15px/1 'Zen Kaku Gothic New', sans-serif;
-  cursor: pointer;
 }

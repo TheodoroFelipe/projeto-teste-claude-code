@@ -1,24 +1,477 @@
 .App {
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.App-header {
+.App-main {
+  flex: 1;
+  width: 100%;
+  padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ---------- Page shell ---------- */
+
+.Page {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.Page-eyebrow {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.Page-title {
+  font-size: 22px;
+  margin-top: 2px;
+}
+
+.Page-backLink {
+  align-self: flex-start;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.Page-empty {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-primary {
+  background: var(--lime);
+  color: var(--lime-ink);
+  font-weight: 800;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  font-size: 14.5px;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: var(--card-alt);
+  color: var(--text);
+  font-weight: 700;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ---------- Form fields ---------- */
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+}
+
+.field-error {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ---------- Segmented control ---------- */
+
+.segmented {
+  display: flex;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.segmented-item {
+  flex: 1;
+  text-align: center;
+  padding: 9px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.segmented-item.active {
+  background: var(--card-alt);
+  color: var(--text);
+}
+
+/* ---------- Badges / chips ---------- */
+
+.badge-lime {
+  background: var(--lime-soft);
+  color: var(--lime);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.chip {
+  background: var(--card-alt);
+  color: var(--text-secondary);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--coral-soft);
+  color: var(--coral);
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* ---------- Avatar ---------- */
+
+.avatar {
+  border-radius: 50%;
+  background: var(--card-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ---------- Level progress ---------- */
+
+.level-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.level-tag {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.level-num {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--lime);
+}
+
+.level-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--card-alt);
+  overflow: hidden;
+}
+
+.level-fill {
+  height: 100%;
+  background: var(--lime);
+  border-radius: 999px;
+}
+
+.level-caption {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ---------- Stat grid ---------- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-tile-label {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.stat-tile-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.stat-tile-value {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.stat-tile-delta {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.stat-tile-delta.up {
+  color: var(--coral);
+}
+
+.stat-tile-delta.down {
+  color: var(--lime);
+}
+
+/* ---------- Table ---------- */
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+table.data-table th,
+table.data-table td {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+table.data-table th {
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Responsive nav ---------- */
+
+.NavBar-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.NavBar-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 700;
 }
 
-.App-nav {
+.NavBar-item.active {
+  color: var(--lime);
+}
+
+.NavBar-icon {
+  width: 21px;
+  height: 21px;
+}
+
+.NavBar-brand {
+  display: none;
+}
+
+.NavBar-brandMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--lime);
+  color: var(--lime-ink);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 13px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  gap: 0.75rem;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  padding: 0.5rem 0;
-  width: 100%;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.NavBar-brandName {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+/* Mobile: fixed bottom tabbar */
+.NavBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.NavBar-list {
+  justify-content: space-around;
+  align-items: center;
+  height: 66px;
+  padding: 0 8px;
+}
+
+/* Desktop / web: top bar */
+@media (min-width: 768px) {
+  .App-main {
+    padding-bottom: 32px;
+  }
+
+  .NavBar {
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    border-top: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .NavBar-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 24px;
+    height: 64px;
+  }
+
+  .NavBar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .NavBar-list {
+    height: auto;
+    justify-content: flex-start;
+    gap: 28px;
+    padding: 0;
+  }
+
+  .NavBar-item {
+    flex-direction: row;
+    font-size: 13px;
+  }
+
+  .NavBar-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .Page {
+    max-width: 640px;
+    padding: 32px 24px 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .Page {
+    max-width: 760px;
+  }
+
+  .Page.Page-wide {
+    max-width: 960px;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

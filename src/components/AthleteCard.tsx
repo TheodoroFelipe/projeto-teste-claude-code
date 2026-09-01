@@ -5,11 +5,24 @@ interface AthleteCardProps {
   athlete: Athlete
 }
 
+function initials(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('')
+}
+
 function AthleteCard({ athlete }: AthleteCardProps) {
   const { name, sport, team, nationality, photoUrl, age } = athlete
   return (
     <div className="AthleteCard">
-      {photoUrl && <img className="AthleteCard-photo" src={photoUrl} alt={name} />}
+      {photoUrl ? (
+        <img className="AthleteCard-photo" src={photoUrl} alt={name} />
+      ) : (
+        <span className="avatar AthleteCard-photo">{initials(name)}</span>
+      )}
       <div className="AthleteCard-info">
         <h2 className="AthleteCard-name">{name}</h2>
         <p className="AthleteCard-sport">{sport}</p>

@@ -45,40 +45,54 @@ function AthleteForm({ initialValues, submitLabel, onSubmit }: AthleteFormProps)
   }
 
   return (
-    <form className="AthleteForm" onSubmit={handleSubmit}>
-      <label htmlFor="athlete-name">Nome</label>
-      <input id="athlete-name" type="text" required value={name} onChange={(event) => setName(event.target.value)} />
+    <form className="AthleteForm card" onSubmit={handleSubmit}>
+      <div className="field-group">
+        <label htmlFor="athlete-name">Nome</label>
+        <input id="athlete-name" type="text" required value={name} onChange={(event) => setName(event.target.value)} />
+      </div>
 
-      <label htmlFor="athlete-sport">Esporte</label>
-      <input
-        id="athlete-sport"
-        type="text"
-        required
-        value={sport}
-        onChange={(event) => setSport(event.target.value)}
-      />
+      <div className="field-group">
+        <label htmlFor="athlete-sport">Esporte</label>
+        <input
+          id="athlete-sport"
+          type="text"
+          required
+          value={sport}
+          onChange={(event) => setSport(event.target.value)}
+        />
+      </div>
 
-      <label htmlFor="athlete-team">Time</label>
-      <input id="athlete-team" type="text" required value={team} onChange={(event) => setTeam(event.target.value)} />
+      <div className="field-group">
+        <label htmlFor="athlete-team">Time</label>
+        <input id="athlete-team" type="text" required value={team} onChange={(event) => setTeam(event.target.value)} />
+      </div>
 
-      <label htmlFor="athlete-nationality">Nacionalidade</label>
-      <input
-        id="athlete-nationality"
-        type="text"
-        required
-        value={nationality}
-        onChange={(event) => setNationality(event.target.value)}
-      />
+      <div className="field-group">
+        <label htmlFor="athlete-nationality">Nacionalidade</label>
+        <input
+          id="athlete-nationality"
+          type="text"
+          required
+          value={nationality}
+          onChange={(event) => setNationality(event.target.value)}
+        />
+      </div>
 
-      <label htmlFor="athlete-photo">Foto</label>
-      {photoUrl && <img className="AthleteForm-photoPreview" src={photoUrl} alt="Pré-visualização" />}
-      <input id="athlete-photo" type="file" accept="image/*" onChange={handlePhotoChange} />
-      {photoError && <p className="AthleteForm-photoError">{photoError}</p>}
+      <div className="field-group">
+        <label htmlFor="athlete-photo">Foto</label>
+        {photoUrl && <img className="AthleteForm-photoPreview" src={photoUrl} alt="Pré-visualização" />}
+        <input id="athlete-photo" type="file" accept="image/*" onChange={handlePhotoChange} />
+        {photoError && <p className="field-error">{photoError}</p>}
+      </div>
 
-      <label htmlFor="athlete-age">Idade</label>
-      <input id="athlete-age" type="number" min={0} value={age} onChange={(event) => setAge(event.target.value)} />
+      <div className="field-group">
+        <label htmlFor="athlete-age">Idade</label>
+        <input id="athlete-age" type="number" min={0} value={age} onChange={(event) => setAge(event.target.value)} />
+      </div>
 
-      <button type="submit">{submitLabel}</button>
+      <button type="submit" className="btn-primary">
+        {submitLabel}
+      </button>
     </form>
   )
 }

@@ -35,8 +35,8 @@ function TrainingSessionPage() {
 
   if (!athlete) {
     return (
-      <div className="TrainingSessionPage">
-        <p>Atleta não encontrado.</p>
+      <div className="Page">
+        <p className="Page-empty">Atleta não encontrado.</p>
         <Link to="/">Voltar para a lista</Link>
       </div>
     )
@@ -44,8 +44,8 @@ function TrainingSessionPage() {
 
   if (!canManage) {
     return (
-      <div className="TrainingSessionPage">
-        <p>Você não tem permissão para gerenciar este atleta.</p>
+      <div className="Page">
+        <p className="Page-empty">Você não tem permissão para gerenciar este atleta.</p>
         <Link to={`/athletes/${athlete.id}`}>Voltar para o perfil</Link>
       </div>
     )
@@ -73,85 +73,104 @@ function TrainingSessionPage() {
     navigate(`/athletes/${currentAthlete.id}`)
   }
 
-  function handleAdvance() {
-    const totalXp = bankedXp + liveXp
+  function finishOrAdvance(xpToBank: number) {
     const isLast = exerciseIndex === exercises.length - 1
-
     if (isLast) {
-      if (totalXp > 0) {
+      if (xpToBank > 0) {
         addEvolutionEntry(currentAthlete.id, {
-          xpGained: totalXp,
+          xpGained: xpToBank,
           note: `${getWeekDayLabel(selectedDay)} — ${exercises.map((exercise) => exercise.name).join(', ')}`,
         })
       }
       navigate(`/athletes/${currentAthlete.id}`)
     } else {
-      setBankedXp(totalXp)
+      setBankedXp(xpToBank)
       setLiveXp(0)
       setExerciseIndex((prev) => prev + 1)
     }
   }
 
+  function handleAdvance() {
+    finishOrAdvance(bankedXp + liveXp)
+  }
+
+  function handleSkip() {
+    finishOrAdvance(bankedXp)
+  }
+
   return (
-    <div className="TrainingSessionPage">
-      <div className="TrainingSessionPage-card">
-        <div className="TrainingSessionPage-topBar">
-          <button
-            type="button"
-            className="TrainingSessionPage-closeButton"
-            onClick={handleClose}
-            aria-label="Fechar sessão"
-          >
-            ✕
-          </button>
-          <div className="TrainingSessionPage-topBarInfo">
-            <select
-              className="TrainingSessionPage-daySelect"
-              value={selectedDay}
-              onChange={(event) => handleDayChange(event.target.value as WeekDay)}
-            >
-              {WEEK_DAYS.map(({ day, label }) => (
-                <option key={day} value={day}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            <div className="TrainingSessionPage-meta">
-              {exercises.length > 0
-                ? `Exercício ${exerciseIndex + 1} de ${exercises.length} · ${formatDuration(elapsedSeconds)} decorrido`
-                : `${formatDuration(elapsedSeconds)} decorrido`}
-            </div>
+    <div className="Page TrainingSessionPage">
+      <div className="TrainingSessionPage-topbar">
+        <button type="button" className="TrainingSessionPage-exitLink" onClick={handleClose}>
+          Sair
+        </button>
+        <select
+          className="TrainingSessionPage-daySelect"
+          value={selectedDay}
+          onChange={(event) => handleDayChange(event.target.value as WeekDay)}
+        >
+          {WEEK_DAYS.map(({ day, label }) => (
+            <option key={day} value={day}>
+              {label}
+            </option>
+          ))}
+        </select>
+        <span className="TrainingSessionPage-timer">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="none">
+            <rect x="6" y="4" width="4" height="16" rx="1" />
+            <rect x="14" y="4" width="4" height="16" rx="1" />
+          </svg>
+          {formatDuration(elapsedSeconds)}
+        </span>
+      </div>
+
+      {exercises.length > 0 && (
+        <div>
+          <div className="TrainingSessionPage-progressLabel">
+            Exercício {exerciseIndex + 1} de {exercises.length}
           </div>
-          <div className="TrainingSessionPage-xpBadgeWrap">
-            <div className="TrainingSessionPage-xpBadge">+{sessionXp}</div>
-            {bursting && <div className="TrainingSessionPage-burst" />}
+          <div className="TrainingSessionPage-progressBar">
+            {exercises.map((exercise, index) => (
+              <div
+                key={exercise.id}
+                className={`TrainingSessionPage-progressSeg${index <= exerciseIndex ? ' done' : ''}`}
+              />
+            ))}
           </div>
         </div>
+      )}
 
-        <div className="TrainingSessionPage-body">
-          {currentExercise ? (
-            <ExerciseLogger
-              key={currentExercise.id}
-              exercise={currentExercise}
-              onXpChange={setLiveXp}
-              onUnitCompleted={handleUnitCompleted}
-            />
-          ) : (
-            <div className="TrainingSessionPage-empty">
-              <p>Nenhum exercício configurado para {getWeekDayLabel(selectedDay)}.</p>
-              <Link to={`/athletes/${currentAthlete.id}/plan`}>Configurar plano semanal</Link>
-            </div>
+      <div className="TrainingSessionPage-xpBadgeWrap">
+        <div className="TrainingSessionPage-xpBadge">+{sessionXp} XP</div>
+        {bursting && <div className="TrainingSessionPage-burst" />}
+      </div>
+
+      {currentExercise ? (
+        <ExerciseLogger
+          key={currentExercise.id}
+          exercise={currentExercise}
+          onXpChange={setLiveXp}
+          onUnitCompleted={handleUnitCompleted}
+        />
+      ) : (
+        <div className="TrainingSessionPage-empty">
+          <p>Nenhum exercício configurado para {getWeekDayLabel(selectedDay)}.</p>
+          <Link to={`/athletes/${currentAthlete.id}/plan`}>Configurar plano semanal</Link>
+        </div>
+      )}
+
+      {currentExercise && (
+        <div className="TrainingSessionPage-footer">
+          <button type="button" className="btn-primary" onClick={handleAdvance}>
+            {exerciseIndex === exercises.length - 1 ? 'FINALIZAR SESSÃO' : 'PRÓXIMO EXERCÍCIO'}
+          </button>
+          {exerciseIndex < exercises.length - 1 && (
+            <button type="button" className="btn-ghost" onClick={handleSkip}>
+              Pular exercício
+            </button>
           )}
         </div>
-
-        {currentExercise && (
-          <div className="TrainingSessionPage-footer">
-            <button type="button" className="TrainingSessionPage-nextButton" onClick={handleAdvance}>
-              {exerciseIndex === exercises.length - 1 ? 'Finalizar sessão' : 'Próximo exercício'}
-            </button>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }

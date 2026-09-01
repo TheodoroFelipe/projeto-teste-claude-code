@@ -25,11 +25,11 @@ const PADDING = { top: 16, right: 16, bottom: 32, left: 44 }
 const PLOT_WIDTH = WIDTH - PADDING.left - PADDING.right
 const PLOT_HEIGHT = HEIGHT - PADDING.top - PADDING.bottom
 
-const SURFACE = '#fcfcfb'
-const TEXT_SECONDARY = '#52514e'
-const MUTED = '#898781'
-const GRIDLINE = '#e1e0d9'
-const BASELINE = '#c3c2b7'
+const SURFACE = '#262a3a'
+const TEXT_SECONDARY = '#d8dae3'
+const MUTED = '#8b90a3'
+const GRIDLINE = 'rgba(148, 152, 175, 0.22)'
+const BASELINE = 'rgba(148, 152, 175, 0.4)'
 
 interface DefinedEntry {
   index: number

@@ -1,28 +1,88 @@
-.UserProfilePage {
+.UserProfilePage-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
+  padding: 6px 0 4px;
+  text-align: center;
 }
 
-.UserProfilePage-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 320px;
-  text-align: left;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
+.UserProfilePage-avatarLg {
+  width: 84px;
+  height: 84px;
+  background: var(--coral-soft);
+  border: 3px solid var(--coral);
+  color: var(--coral);
+  font-size: 26px;
 }
 
-.UserProfilePage-error {
-  color: #c0392b;
-  margin: 0;
+.UserProfilePage-nameButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+}
+
+.UserProfilePage-heroName {
+  font-size: 21px;
+  font-weight: 800;
+  font-family: var(--font-heading);
 }
 
 .UserProfilePage-nameEdit {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
+  align-items: center;
+}
+
+.UserProfilePage-heroSub {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.UserProfilePage-heroChips {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.UserProfilePage-statTile {
+  align-items: center;
+  text-align: center;
+}
+
+.UserProfilePage-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.UserProfilePage-timelineRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.UserProfilePage-timelineDate {
+  width: 44px;
+  flex-shrink: 0;
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  font-weight: 700;
+  text-align: center;
+}
+
+.UserProfilePage-timelineNote {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text);
+}
+
+@media (min-width: 768px) {
+  .UserProfilePage-statGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
