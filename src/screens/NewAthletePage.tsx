@@ -20,8 +20,8 @@ function NewAthletePage() {
 
   if (shouldRedirectAway) return null
 
-  function handleSubmit(input: NewAthleteInput) {
-    addAthlete(input)
+  async function handleSubmit(input: NewAthleteInput) {
+    await addAthlete(input)
     router.replace('/')
   }
 

@@ -1,10 +1,10 @@
-import RequireAuth from '../../../../components/RequireAuth'
+import { redirect } from 'next/navigation'
+import { getCurrentUser } from '../../../../lib/session'
 import EditAthletePage from '../../../../screens/EditAthletePage'
 
-export default function Page() {
-  return (
-    <RequireAuth>
-      <EditAthletePage />
-    </RequireAuth>
-  )
+export default async function Page() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/login')
+
+  return <EditAthletePage />
 }

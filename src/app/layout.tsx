@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { JetBrains_Mono, Manrope, Sora } from 'next/font/google'
 import { Providers } from './providers'
+import { listAthletesAction } from './actions/athletes'
+import { getCurrentUser } from '../lib/session'
 
 import '../index.css'
 import '../App.css'
@@ -30,11 +32,15 @@ export const metadata: Metadata = {
   icons: { icon: '/vite.svg' },
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const [initialUser, initialAthletes] = await Promise.all([getCurrentUser(), listAthletesAction()])
+
   return (
     <html lang="pt-BR" className={`${sora.variable} ${manrope.variable} ${jetbrainsMono.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers initialUser={initialUser} initialAthletes={initialAthletes}>
+          {children}
+        </Providers>
       </body>
     </html>
   )

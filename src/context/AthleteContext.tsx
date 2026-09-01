@@ -1,85 +1,69 @@
 'use client'
 
-import { createContext } from 'react'
+import { createContext, useState } from 'react'
 import type { ReactNode } from 'react'
-import { useLocalStorage } from '../hooks/useLocalStorage'
-import { generateId } from '../utils/id'
-import { seedAthletes } from '../data/seedAthletes'
+import {
+  addAthleteAction,
+  addEvolutionEntryAction,
+  addMeasurementEntryAction,
+  updateAthleteAction,
+  updateWeeklyPlanAction,
+} from '../app/actions/athletes'
 import type { Athlete, NewAthleteInput, NewBodyMeasurementInput, NewEvolutionEntryInput } from '../types/athlete'
 import type { WeeklyPlan } from '../types/trainingPlan'
 
 export interface AthleteContextValue {
   athletes: Athlete[]
   getAthleteById: (id: string) => Athlete | undefined
-  addAthlete: (input: NewAthleteInput, id?: string) => void
-  updateAthlete: (athleteId: string, input: NewAthleteInput) => void
-  addEvolutionEntry: (athleteId: string, input: NewEvolutionEntryInput) => void
-  updateWeeklyPlan: (athleteId: string, weeklyPlan: WeeklyPlan) => void
-  addMeasurementEntry: (athleteId: string, input: NewBodyMeasurementInput) => void
+  addAthlete: (input: NewAthleteInput) => Promise<Athlete>
+  updateAthlete: (athleteId: string, input: NewAthleteInput) => Promise<Athlete>
+  addEvolutionEntry: (athleteId: string, input: NewEvolutionEntryInput) => Promise<Athlete>
+  updateWeeklyPlan: (athleteId: string, weeklyPlan: WeeklyPlan) => Promise<Athlete>
+  addMeasurementEntry: (athleteId: string, input: NewBodyMeasurementInput) => Promise<Athlete>
 }
 
 export const AthleteContext = createContext<AthleteContextValue | undefined>(undefined)
 
 interface AthleteProviderProps {
   children: ReactNode
+  initialAthletes: Athlete[]
 }
 
-function AthleteProvider({ children }: AthleteProviderProps) {
-  const [athletes, setAthletes] = useLocalStorage<Athlete[]>('projeto-teste:athletes', seedAthletes)
+function AthleteProvider({ children, initialAthletes }: AthleteProviderProps) {
+  const [athletes, setAthletes] = useState<Athlete[]>(initialAthletes)
 
   function getAthleteById(id: string): Athlete | undefined {
     return athletes.find((athlete) => athlete.id === id)
   }
 
-  function addAthlete(input: NewAthleteInput, id: string = generateId()): void {
-    const newAthlete: Athlete = {
-      ...input,
-      id,
-      evolutionHistory: [],
-    }
-    setAthletes((prev) => [...prev, newAthlete])
+  async function addAthlete(input: NewAthleteInput): Promise<Athlete> {
+    const created = await addAthleteAction(input)
+    setAthletes((prev) => [...prev, created])
+    return created
   }
 
-  function updateAthlete(athleteId: string, input: NewAthleteInput): void {
-    setAthletes((prev) =>
-      prev.map((athlete) => (athlete.id === athleteId ? { ...athlete, ...input } : athlete)),
-    )
+  async function updateAthlete(athleteId: string, input: NewAthleteInput): Promise<Athlete> {
+    const updated = await updateAthleteAction(athleteId, input)
+    setAthletes((prev) => prev.map((athlete) => (athlete.id === athleteId ? updated : athlete)))
+    return updated
   }
 
-  function addEvolutionEntry(athleteId: string, input: NewEvolutionEntryInput): void {
-    const newEntry = {
-      ...input,
-      id: generateId(),
-      date: new Date().toISOString(),
-    }
-    setAthletes((prev) =>
-      prev.map((athlete) =>
-        athlete.id === athleteId
-          ? { ...athlete, evolutionHistory: [...athlete.evolutionHistory, newEntry] }
-          : athlete,
-      ),
-    )
+  async function addEvolutionEntry(athleteId: string, input: NewEvolutionEntryInput): Promise<Athlete> {
+    const updated = await addEvolutionEntryAction(athleteId, input)
+    setAthletes((prev) => prev.map((athlete) => (athlete.id === athleteId ? updated : athlete)))
+    return updated
   }
 
-  function updateWeeklyPlan(athleteId: string, weeklyPlan: WeeklyPlan): void {
-    setAthletes((prev) =>
-      prev.map((athlete) => (athlete.id === athleteId ? { ...athlete, weeklyPlan } : athlete)),
-    )
+  async function updateWeeklyPlan(athleteId: string, weeklyPlan: WeeklyPlan): Promise<Athlete> {
+    const updated = await updateWeeklyPlanAction(athleteId, weeklyPlan)
+    setAthletes((prev) => prev.map((athlete) => (athlete.id === athleteId ? updated : athlete)))
+    return updated
   }
 
-  function addMeasurementEntry(athleteId: string, input: NewBodyMeasurementInput): void {
-    const newEntry = {
-      ...input,
-      id: generateId(),
-      date: new Date().toISOString(),
-    }
-    setAthletes((prev) =>
-      prev.map((athlete) =>
-        athlete.id === athleteId
-          ? { ...athlete, measurements: [...(athlete.measurements ?? []), newEntry] }
-          : athlete,
-      ),
-    )
+  async function addMeasurementEntry(athleteId: string, input: NewBodyMeasurementInput): Promise<Athlete> {
+    const updated = await addMeasurementEntryAction(athleteId, input)
+    setAthletes((prev) => prev.map((athlete) => (athlete.id === athleteId ? updated : athlete)))
+    return updated
   }
 
   return (

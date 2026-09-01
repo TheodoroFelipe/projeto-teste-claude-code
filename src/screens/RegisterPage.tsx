@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 import { useAthletes } from '../hooks/useAthletes'
-import { generateId } from '../utils/id'
 import { SPORT_OPTIONS } from '../utils/sports'
 import { isValidEmail, MIN_PASSWORD_LENGTH } from '../utils/validation'
 
@@ -39,18 +38,17 @@ function RegisterPage() {
     if (!sport) return setError('Modalidade principal é obrigatória.')
     const finalSport = sport === OTHER_SPORT_OPTION ? customSport.trim() : sport
     if (!finalSport) return setError('Informe a modalidade.')
-    if (isEmailTaken(email)) return setError('Este e-mail já está cadastrado.')
+    if (await isEmailTaken(email)) return setError('Este e-mail já está cadastrado.')
 
     setIsSubmitting(true)
-    const athleteId = generateId()
-    addAthlete({ name: name.trim(), sport: finalSport, team: '', nationality: '' }, athleteId)
+    const newAthlete = await addAthlete({ name: name.trim(), sport: finalSport, team: '', nationality: '' })
 
     const result = await register({
       name,
       email,
       password,
       confirmPassword,
-      athleteId,
+      athleteId: newAthlete.id,
       role: isCoach ? 'coach' : 'athlete',
     })
     setIsSubmitting(false)

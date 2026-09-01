@@ -123,14 +123,14 @@ function BodyMeasurementsPage() {
   const latest = sortedDesc[0]
   const previous = sortedDesc[1]
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const input: NewBodyMeasurementInput = {}
     for (const field of FIELDS) {
       const raw = values[field.key].trim()
       if (raw) input[field.key] = Number(raw)
     }
-    addMeasurementEntry(currentAthlete.id, input)
+    await addMeasurementEntry(currentAthlete.id, input)
     setValues(EMPTY_VALUES)
   }
 

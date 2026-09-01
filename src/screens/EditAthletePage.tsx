@@ -34,8 +34,8 @@ function EditAthletePage() {
 
   const currentAthlete: Athlete = athlete
 
-  function handleSubmit(input: NewAthleteInput) {
-    updateAthlete(currentAthlete.id, input)
+  async function handleSubmit(input: NewAthleteInput) {
+    await updateAthlete(currentAthlete.id, input)
     router.replace(`/athletes/${currentAthlete.id}`)
   }
 

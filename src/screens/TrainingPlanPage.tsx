@@ -84,8 +84,8 @@ function TrainingPlanPage() {
     )
   }
 
-  function handleSave() {
-    updateWeeklyPlan(currentAthlete.id, weeklyPlan)
+  async function handleSave() {
+    await updateWeeklyPlan(currentAthlete.id, weeklyPlan)
     router.push(`/athletes/${currentAthlete.id}`)
   }
 

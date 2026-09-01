@@ -90,7 +90,7 @@ function UserProfilePage() {
     }
 
     if (athlete && photoDataUrl) {
-      updateAthlete(athlete.id, {
+      await updateAthlete(athlete.id, {
         name: athlete.name,
         sport: athlete.sport,
         team: athlete.team,

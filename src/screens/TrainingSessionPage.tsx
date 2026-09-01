@@ -95,10 +95,10 @@ function TrainingSessionPage() {
     router.push(`/athletes/${currentAthlete.id}`)
   }
 
-  function finishOrAdvance() {
+  async function finishOrAdvance() {
     if (isLastExercise) {
       if (sessionXp > 0) {
-        addEvolutionEntry(currentAthlete.id, {
+        await addEvolutionEntry(currentAthlete.id, {
           xpGained: sessionXp,
           note: `${getWeekDayLabel(selectedDay)} — ${exercises.map((exercise) => exercise.name).join(', ')}`,
         })
@@ -109,20 +109,20 @@ function TrainingSessionPage() {
     }
   }
 
-  function handleNextClick() {
+  async function handleNextClick() {
     if (!isCurrentComplete && !showIncompleteWarning) {
       setShowIncompleteWarning(true)
       return
     }
     setShowIncompleteWarning(false)
-    finishOrAdvance()
+    await finishOrAdvance()
   }
 
   function handleBack() {
     setExerciseIndex((prev) => Math.max(prev - 1, 0))
   }
 
-  function handleSkip() {
+  async function handleSkip() {
     if (currentExercise) {
       setXpByIndex((prev) => ({ ...prev, [exerciseIndex]: 0 }))
       setDoneByIndex((prev) => ({
@@ -131,7 +131,7 @@ function TrainingSessionPage() {
       }))
     }
     setShowIncompleteWarning(false)
-    finishOrAdvance()
+    await finishOrAdvance()
   }
 
   return (
