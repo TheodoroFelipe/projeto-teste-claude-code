@@ -1,3 +1,4 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core'
 import { doublePrecision, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import type { WeeklyPlan } from '../types/trainingPlan'
 
@@ -12,6 +13,8 @@ export const athletes = pgTable('athletes', {
   heightCm: doublePrecision('height_cm'),
   weeklyPlan: jsonb('weekly_plan').$type<WeeklyPlan>(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  /** Treinador que cadastrou o atleta (null quando o próprio atleta se cadastrou). */
+  createdByUserId: uuid('created_by_user_id').references((): AnyPgColumn => users.id, { onDelete: 'set null' }),
 })
 
 export const users = pgTable('users', {

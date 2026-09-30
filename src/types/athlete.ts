@@ -33,6 +33,7 @@ export interface Athlete {
   photoUrl?: string
   age?: number
   heightCm?: number
+  createdByUserId?: string
   evolutionHistory: EvolutionEntry[]
   weeklyPlan?: WeeklyPlan
   measurements?: BodyMeasurementEntry[]

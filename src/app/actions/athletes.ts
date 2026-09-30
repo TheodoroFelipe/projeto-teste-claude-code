@@ -24,6 +24,9 @@ export async function listAthletesAction(): Promise<Athlete[]> {
 }
 
 export async function addAthleteAction(input: NewAthleteInput): Promise<Athlete> {
+  // Sem sessão = auto-cadastro do atleta; treinador logado passa a ser o dono do registro.
+  const user = await getCurrentUser()
+  const createdByUserId = user?.role === 'coach' ? user.id : null
   const [created] = await db
     .insert(athletes)
     .values({
@@ -34,6 +37,7 @@ export async function addAthleteAction(input: NewAthleteInput): Promise<Athlete>
       photoUrl: input.photoUrl ?? null,
       age: input.age ?? null,
       heightCm: input.heightCm ?? null,
+      createdByUserId,
     })
     .returning()
 

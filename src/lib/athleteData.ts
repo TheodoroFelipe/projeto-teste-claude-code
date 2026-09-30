@@ -73,6 +73,7 @@ export function assembleAthlete(
     photoUrl: row.photoUrl ?? undefined,
     age: row.age ?? undefined,
     heightCm: row.heightCm ?? undefined,
+    createdByUserId: row.createdByUserId ?? undefined,
     weeklyPlan: row.weeklyPlan ?? undefined,
     evolutionHistory: evolutionRows.filter((e) => e.athleteId === row.id).map(toEvolutionEntry),
     measurements: measurementRows.filter((m) => m.athleteId === row.id).map(toMeasurementEntry),
@@ -94,7 +95,7 @@ export async function getAthleteWithRelations(athleteId: string): Promise<Athlet
   return assembleAthlete(row, evolutionRows, measurementRows, assignedCoachRows)
 }
 
-/** Ids dos atletas que o usuário pode ver/gerenciar: o próprio e, para treinadores, os vinculados a ele. */
+/** Ids dos atletas que o usuário pode ver/gerenciar: o próprio e, para treinadores, os vinculados a ele e os que ele cadastrou. */
 export async function getManagedAthleteIds(user: PublicUser): Promise<string[]> {
   if (user.role !== 'coach') return [user.athleteId]
 
@@ -102,7 +103,8 @@ export async function getManagedAthleteIds(user: PublicUser): Promise<string[]> 
     .select({ athleteId: coachAthleteLinks.athleteId })
     .from(coachAthleteLinks)
     .where(eq(coachAthleteLinks.coachUserId, user.id))
-  return [user.athleteId, ...links.map((link) => link.athleteId)]
+  const created = await db.select({ id: athletes.id }).from(athletes).where(eq(athletes.createdByUserId, user.id))
+  return [user.athleteId, ...links.map((link) => link.athleteId), ...created.map((row) => row.id)]
 }
 
 export async function canManageAthlete(user: PublicUser, athleteId: string): Promise<boolean> {
@@ -114,7 +116,14 @@ export async function canManageAthlete(user: PublicUser, athleteId: string): Pro
     .from(coachAthleteLinks)
     .where(and(eq(coachAthleteLinks.athleteId, athleteId), eq(coachAthleteLinks.coachUserId, user.id)))
     .limit(1)
-  return Boolean(link)
+  if (link) return true
+
+  const [created] = await db
+    .select({ id: athletes.id })
+    .from(athletes)
+    .where(and(eq(athletes.id, athleteId), eq(athletes.createdByUserId, user.id)))
+    .limit(1)
+  return Boolean(created)
 }
 
 /** Atletas visíveis ao usuário — nunca a lista completa. */

@@ -9,5 +9,5 @@ export function useCanManageAthlete(athleteId: string | undefined): boolean {
   if (currentUser.role !== 'coach') return false
 
   const athlete = getAthleteById(athleteId)
-  return athlete?.assignedCoach?.coachUserId === currentUser.id
+  return athlete?.assignedCoach?.coachUserId === currentUser.id || athlete?.createdByUserId === currentUser.id
 }
