@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import WorkoutCalendar from '../components/WorkoutCalendar'
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import { calcPlannedExerciseXp } from '../utils/plannedExerciseXp'
@@ -110,6 +111,8 @@ function TodayWorkoutPage() {
           </div>
         </>
       )}
+
+      <WorkoutCalendar evolutionHistory={athlete.evolutionHistory} />
     </div>
   )
 }

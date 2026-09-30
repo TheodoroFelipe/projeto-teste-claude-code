@@ -1,0 +1,75 @@
+.WorkoutCalendar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.WorkoutCalendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.WorkoutCalendar-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.WorkoutCalendar-month {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.WorkoutCalendar-count {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.WorkoutCalendar-nav {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--card-alt);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.WorkoutCalendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  text-align: center;
+}
+
+.WorkoutCalendar-weekday {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+}
+
+.WorkoutCalendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.WorkoutCalendar-day--today {
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+}
+
+.WorkoutCalendar-day--trained {
+  background: var(--lime);
+  color: var(--lime-ink);
+  font-weight: 800;
+}

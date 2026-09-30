@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import AthleteCard from '../components/AthleteCard'
+import WorkoutCalendar from '../components/WorkoutCalendar'
 import { useAthletes } from '../hooks/useAthletes'
 import { useCanManageAthlete } from '../hooks/useCanManageAthlete'
 import { getLevelProgress, getTotalXp } from '../utils/xp'
@@ -65,6 +66,8 @@ function AthleteProfilePage() {
           {currentLevelXp} / {currentLevelXp + xpToNextLevel} XP para o próximo nível
         </div>
       </div>
+
+      <WorkoutCalendar evolutionHistory={athlete.evolutionHistory} />
 
       <div>
         <div className="section-title" style={{ marginBottom: 10 }}>
