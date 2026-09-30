@@ -24,6 +24,8 @@ export const users = pgTable('users', {
     .notNull()
     .references(() => athletes.id, { onDelete: 'cascade' }),
   role: text('role', { enum: ['athlete', 'coach'] }).notNull(),
+  plan: text('plan', { enum: ['free', 'pro'] }).notNull().default('free'),
+  proUntil: timestamp('pro_until', { withTimezone: true }),
 })
 
 export const evolutionEntries = pgTable('evolution_entries', {

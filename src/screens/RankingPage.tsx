@@ -1,9 +1,11 @@
 'use client'
 
-import Link from 'next/link'
-import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
-import { getLevelProgress, getTotalXp } from '../utils/xp'
+import type { RankingEntry } from '../types/ranking'
+
+interface RankingPageProps {
+  entries: RankingEntry[]
+}
 
 function initials(name: string): string {
   return name
@@ -14,17 +16,8 @@ function initials(name: string): string {
     .join('')
 }
 
-function RankingPage() {
-  const { athletes } = useAthletes()
+function RankingPage({ entries: ranked }: RankingPageProps) {
   const { currentUser } = useAuth()
-
-  const ranked = athletes
-    .map((athlete) => {
-      const totalXp = getTotalXp(athlete.evolutionHistory)
-      const { level } = getLevelProgress(totalXp)
-      return { athlete, totalXp, level }
-    })
-    .sort((a, b) => b.totalXp - a.totalXp)
 
   const podium = ranked.slice(0, 3)
   const rest = ranked.slice(3)
@@ -47,29 +40,28 @@ function RankingPage() {
           )}
 
           <ol className="RankingPage-list">
-            {(podium.length === 3 ? rest : ranked).map(({ athlete, totalXp, level }) => {
-              const position = ranked.findIndex((entry) => entry.athlete.id === athlete.id) + 1
-              const isMe = currentUser?.athleteId === athlete.id
+            {(podium.length === 3 ? rest : ranked).map((entry) => {
+              const { athleteId, name, photoUrl, totalXp, level } = entry
+              const position = ranked.findIndex((item) => item.athleteId === athleteId) + 1
+              const isMe = currentUser?.athleteId === athleteId
               return (
-                <li key={athlete.id}>
-                  <Link className={`RankingPage-row${isMe ? ' me' : ''}`} href={`/athletes/${athlete.id}`}>
+                <li key={athleteId}>
+                  <div className={`RankingPage-row${isMe ? ' me' : ''}`}>
                     <span className="RankingPage-rankNum">{position}</span>
-                    {athlete.photoUrl ? (
-                      <img className="avatar RankingPage-avatarSm RankingPage-avatarImg" src={athlete.photoUrl} alt={athlete.name} />
+                    {photoUrl ? (
+                      <img className="avatar RankingPage-avatarSm RankingPage-avatarImg" src={photoUrl} alt={name} />
                     ) : (
-                      <span className="avatar RankingPage-avatarSm">{initials(athlete.name)}</span>
+                      <span className="avatar RankingPage-avatarSm">{initials(name)}</span>
                     )}
                     <span className="RankingPage-rowInfo">
                       <span className="RankingPage-rowName">
-                        {athlete.name}
+                        {name}
                         {isMe && <span className="RankingPage-youTag">VOCÊ</span>}
                       </span>
-                      <span className="RankingPage-rowSport">
-                        {athlete.sport} · Nível {level}
-                      </span>
+                      <span className="RankingPage-rowSport">Nível {level}</span>
                     </span>
                     <span className="RankingPage-rowXp">{totalXp.toLocaleString('pt-BR')} XP</span>
-                  </Link>
+                  </div>
                 </li>
               )
             })}
@@ -81,7 +73,7 @@ function RankingPage() {
 }
 
 interface PodiumColumnProps {
-  entry?: { athlete: { id: string; name: string; photoUrl?: string }; totalXp: number }
+  entry?: RankingEntry
   place: 1 | 2 | 3
   size: 'md' | 'lg'
   crowned?: boolean
@@ -93,29 +85,29 @@ function PodiumColumn({ entry, place, size, crowned }: PodiumColumnProps) {
   const barHeight = place === 1 ? 88 : place === 2 ? 64 : 48
 
   return (
-    <Link className="RankingPage-podiumCol" href={`/athletes/${entry.athlete.id}`}>
+    <div className="RankingPage-podiumCol">
       {crowned && (
         <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--lime)" stroke="none" className="RankingPage-crown">
           <path d="M3 8l4 3 5-6 5 6 4-3-2 10H5L3 8z" />
         </svg>
       )}
-      {entry.athlete.photoUrl ? (
+      {entry.photoUrl ? (
         <img
           className={`avatar RankingPage-podiumAvatar RankingPage-podiumAvatar-${size} RankingPage-avatarImg${crowned ? ' crowned' : ''}`}
-          src={entry.athlete.photoUrl}
-          alt={entry.athlete.name}
+          src={entry.photoUrl}
+          alt={entry.name}
         />
       ) : (
         <span className={`avatar RankingPage-podiumAvatar RankingPage-podiumAvatar-${size}${crowned ? ' crowned' : ''}`}>
-          {initials(entry.athlete.name)}
+          {initials(entry.name)}
         </span>
       )}
-      <span className="RankingPage-podiumName">{entry.athlete.name}</span>
+      <span className="RankingPage-podiumName">{entry.name}</span>
       <span className="RankingPage-podiumXp">{entry.totalXp.toLocaleString('pt-BR')} XP</span>
       <span className={`RankingPage-podiumBar${crowned ? ' crowned' : ''}`} style={{ height: barHeight }}>
         {place}
       </span>
-    </Link>
+    </div>
   )
 }
 

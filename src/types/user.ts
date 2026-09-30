@@ -1,4 +1,5 @@
 export type UserRole = 'athlete' | 'coach'
+export type UserPlan = 'free' | 'pro'
 
 export interface User {
   id: string
@@ -8,9 +9,12 @@ export interface User {
   createdAt: string
   athleteId: string
   role: UserRole
+  plan: UserPlan
+  /** ISO date em que o Pro expira; null = sem expiração definida. */
+  proUntil: string | null
 }
 
-export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'createdAt' | 'athleteId' | 'role'>
+export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'createdAt' | 'athleteId' | 'role' | 'plan' | 'proUntil'>
 
 export interface NewUserInput {
   name: string

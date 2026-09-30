@@ -60,6 +60,8 @@ function toPublicUser(user: typeof users.$inferSelect): PublicUser {
     createdAt: user.createdAt.toISOString(),
     athleteId: user.athleteId,
     role: user.role,
+    plan: user.plan,
+    proUntil: user.proUntil?.toISOString() ?? null,
   }
 }
 

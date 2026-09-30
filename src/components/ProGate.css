@@ -1,0 +1,22 @@
+.ProGate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ProGate-tag {
+  color: var(--lime);
+}
+
+.ProGate-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+}
+
+.ProGate-description {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}

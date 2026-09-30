@@ -7,6 +7,7 @@ import { acceptPlanInviteAction, declinePlanInviteAction } from '../app/actions/
 import { useAthletes } from '../hooks/useAthletes'
 import { useAuth } from '../hooks/useAuth'
 import { readFileAsDataUrl } from '../utils/file'
+import { isPro } from '../utils/plan'
 import { getLevelProgress, getStreakDays, getTotalXp } from '../utils/xp'
 
 const MAX_PHOTO_BYTES = 4 * 1024 * 1024
@@ -178,6 +179,9 @@ function UserProfilePage() {
             </span>
             <div className="UserProfilePage-heroChips">
               <span className="chip">{currentUser.email}</span>
+              <Link className="chip" href="/plano">
+                {isPro(currentUser) ? '★ Plano Pro' : 'Plano Grátis · Conhecer o Pro'}
+              </Link>
             </div>
             <button type="button" className="btn-secondary" onClick={startEditing}>
               Editar perfil

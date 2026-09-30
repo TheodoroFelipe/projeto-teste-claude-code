@@ -1,0 +1,43 @@
+.PlansPage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.PlansPage-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.PlansPage-card--pro {
+  border-color: var(--lime);
+}
+
+.PlansPage-proTag {
+  color: var(--lime);
+}
+
+.PlansPage-cardTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+}
+
+.PlansPage-features {
+  margin: 0;
+  padding-left: 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.PlansPage-note {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
